@@ -1011,6 +1011,17 @@ button {
   box-shadow: 0 0 0 2px rgba(36, 129, 204, 0.1);
 }
 
+.paste-textarea[readonly] {
+  background: rgba(52, 168, 83, 0.08);
+  border-color: #34a853;
+  color: var(--tg-theme-text-color);
+}
+
+.paste-textarea[readonly]::selection {
+  background: #34a853;
+  color: white;
+}
+
 .storage-info {
   display: flex;
   flex-direction: column;

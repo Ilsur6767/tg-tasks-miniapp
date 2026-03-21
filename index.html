@@ -62,20 +62,29 @@
           <h3 class="settings-section-title">💾 Data Sync</h3>
           <p class="settings-hint">Transfer tasks between devices instantly</p>
 
-          <button class="settings-btn settings-btn-primary" id="copyBtn">
-            <span>📋</span> Copy to Clipboard
+          <button class="settings-btn settings-btn-primary" id="showExportBtn">
+            <span>📋</span> Show Export Code
           </button>
-          <p class="settings-hint">Tap to copy all data. Then paste on another device.</p>
+          <p class="settings-hint" id="exportHint">Tap to show data. Select all and copy (Ctrl+C).</p>
+
+          <textarea
+            id="exportArea"
+            class="paste-textarea"
+            placeholder="Export code will appear here. Select all and copy."
+            spellcheck="false"
+            readonly
+            style="display:none;"
+          ></textarea>
 
           <textarea
             id="pasteArea"
             class="paste-textarea"
-            placeholder="Or paste data here from another device and tap Load"
+            placeholder="Paste exported code here from another device and tap Load"
             spellcheck="false"
           ></textarea>
 
           <button class="settings-btn settings-btn-secondary" id="loadBtn">
-            <span>📥</span> Load from Text
+            <span>📥</span> Load from Pasted Code
           </button>
         </div>
 

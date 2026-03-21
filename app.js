@@ -832,7 +832,7 @@ const UIMiniTasks = {
 // ============================================================
 
 const UISettings = {
-  copyBtn: document.getElementById('copyBtn'),
+  showExportBtn: document.getElementById('showExportBtn'),
   pasteArea: document.getElementById('pasteArea'),
   loadBtn: document.getElementById('loadBtn'),
   exportBtn: document.getElementById('exportBtn'),
@@ -843,10 +843,10 @@ const UISettings = {
   lastResetEl: document.getElementById('lastResetInfo'),
 
   init() {
-    // Copy to clipboard
-    this.copyBtn.addEventListener('click', () => {
+    // Show export code
+    this.showExportBtn.addEventListener('click', () => {
       haptic('light');
-      DataSync.copyToClipboard();
+      DataSync.showExport();
     });
 
     // Load from textarea
@@ -1027,34 +1027,29 @@ const DataSync = {
     return JSON.parse(json);
   },
 
-  // Копировать в буфер обмена
-  async copyToClipboard() {
-    try {
-      const data = {
-        v: '1',
-        tasks: Store.getTasks(),
-        mini: Store.getMiniTasks(),
-        ach: Store.getAchievements(),
-      };
-      const encoded = this._encode(data);
+  // Показать экспортированные данные в поле для копирования
+  showExport() {
+    const data = {
+      v: '1',
+      tasks: Store.getTasks(),
+      mini: Store.getMiniTasks(),
+      ach: Store.getAchievements(),
+    };
+    const encoded = this._encode(data);
 
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(encoded);
-      } else {
-        // Fallback для старых браузеров
-        const textarea = document.createElement('textarea');
-        textarea.value = encoded;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-      }
+    const exportArea = document.getElementById('exportArea');
+    const exportHint = document.getElementById('exportHint');
 
-      hapticNotify('success');
-      alert('✅ Data copied to clipboard!');
-    } catch (err) {
-      alert('❌ Failed to copy: ' + err.message);
-    }
+    exportArea.value = encoded;
+    exportArea.style.display = 'block';
+    exportHint.textContent = '👆 Select all text (Ctrl+A or Cmd+A) and copy (Ctrl+C or Cmd+C)';
+
+    // Auto-select after short delay so user can see it
+    setTimeout(() => {
+      exportArea.select();
+    }, 200);
+
+    haptic('light');
   },
 
   // Загрузить из текстового поля
