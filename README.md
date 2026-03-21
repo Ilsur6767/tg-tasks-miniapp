@@ -1,6 +1,6 @@
 # ✅ Telegram Tasks Mini App
 
-A minimalist personal productivity tracker built as a **Telegram Mini App**. Track daily habits, one-time tasks, quick todos, and celebrate your achievements — all inside Telegram.
+A minimalist personal productivity tracker built as a **Telegram Mini App**. Track daily habits, one-time tasks, quick todos, journal your thoughts, and celebrate your achievements — all inside Telegram.
 
 ![Preview](https://img.shields.io/badge/Telegram-Mini%20App-2CA5E0?style=flat&logo=telegram)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -14,12 +14,14 @@ A minimalist personal productivity tracker built as a **Telegram Mini App**. Tra
 - **📅 Day-of-week picker** — set which days a recurring task is active (e.g. gym on Mon/Wed/Fri)
 - **⚡ Mini-tasks tab** — quick lightweight todos
 - **🏆 Achievements tab** — history of everything you've completed, grouped by date
+- **💭 Thoughts tab** — diary-style journal with timestamps, grouped by date, long-press to delete
 - **📊 Progress bar** — daily completion bar (counts only tasks active today)
 - **✏️ Full CRUD** — add, edit, delete everything
 - **👆 Swipe to action** — swipe left on any item to reveal Edit / Delete buttons
 - **🔔 Haptic feedback** — native Telegram vibration on interactions
 - **🎨 Follows Telegram theme** — automatically adapts to light / dark mode and user's color scheme
-- **💾 Offline-first** — all data stored in `localStorage`, no backend needed
+- **🌐 RU / EN interface** — language switcher in the header, preference saved per-user
+- **☁️ Automatic cloud sync** — data stored in Telegram CloudStorage, syncs across all your devices automatically
 - **Zero dependencies** — plain HTML + CSS + Vanilla JS
 
 ---
@@ -68,7 +70,7 @@ Open that link — the Mini App launches inside Telegram. 🎉
 tg-tasks-miniapp/
 ├── index.html   — markup: tabs, modal, nav, context menu
 ├── styles.css   — all styles using Telegram CSS variables
-├── app.js       — all logic: Store, SwipeHandler, Modal, Tabs, render
+├── app.js       — all logic: Store, SwipeHandler, Modal, Tabs, I18n, UIThoughts
 └── README.md
 ```
 
@@ -78,14 +80,18 @@ tg-tasks-miniapp/
 
 ### Data model
 
-All data is stored in `localStorage` under four keys:
+All data is stored in **Telegram CloudStorage** (synced to your Telegram account across devices). The following keys are used:
 
 | Key | Contents |
 |-----|----------|
-| `tma_tasks` | Array of task objects `{id, title, type, completed, days, createdAt}` |
-| `tma_mini_tasks` | Array of mini-task objects `{id, title, completed, createdAt}` |
-| `tma_achievements` | Array of completed items `{id, taskId, title, type, completedAt, completedDate}` |
+| `tma_tasks_n` + `tma_tasks_0..N` | Chunked array of task objects `{id, title, type, completed, days, createdAt}` |
+| `tma_mini_tasks_n` + `tma_mini_tasks_0..N` | Chunked array of mini-task objects `{id, title, completed, createdAt}` |
+| `tma_achievements_n` + `tma_achievements_0..N` | Chunked array of completed items `{id, taskId, title, type, completedAt, completedDate}` |
+| `tma_thoughts_n` + `tma_thoughts_0..N` | Chunked array of thought entries `{id, text, createdAt}` |
 | `tma_last_reset` | Date string `YYYY-MM-DD` of last daily reset |
+| `tma_lang` | Interface language: `"ru"` or `"en"` |
+
+> **Chunked storage**: Telegram CloudStorage has a 1024-byte limit per key. Large arrays are automatically split into 800-character chunks (`prefix_0`, `prefix_1`, …) with the count stored in `prefix_n`.
 
 ### Daily reset
 
@@ -96,6 +102,14 @@ If the date changed, it sets `completed = false` on all **daily** tasks — they
 
 Each daily task has a `days` array (0 = Mon … 6 = Sun).
 Empty array means **every day**. Tasks not scheduled for today are shown in a dimmed "Not today" section and cannot be checked off.
+
+### Language switcher
+
+The **RU / EN** button in the header switches the entire interface language. The preference is saved to CloudStorage and restored on next open.
+
+### Thoughts diary
+
+The Thoughts tab is a simple journal. Each entry is saved with a timestamp and displayed grouped by date. Long-press (or hover on desktop) any entry to reveal a delete button.
 
 ---
 

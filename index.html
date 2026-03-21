@@ -3,129 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <title>Мои задачи</title>
+  <title>Tasks</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Header с прогресс-баром -->
+  <!-- Header -->
   <header class="app-header" id="appHeader">
     <div class="header-content">
       <div class="progress-info">
-        <span class="progress-label-text">Прогресс дня</span>
+        <span class="progress-label-text" data-i18n="progressLabel">Прогресс дня</span>
         <span class="progress-stats" id="progressStats">0 / 0</span>
       </div>
       <div class="progress-track">
         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
       </div>
     </div>
+    <button class="lang-btn" id="langBtn">EN</button>
   </header>
 
   <!-- Контент вкладок -->
   <main class="main-content">
 
-    <!-- Вкладка: Задачи -->
+    <!-- Tasks -->
     <section class="tab-panel active" id="tab-tasks">
       <div class="list-container" id="taskList"></div>
       <div class="empty-state" id="emptyTasks" style="display:none">
         <div class="empty-icon">📋</div>
-        <p class="empty-text">Задач пока нет</p>
-        <p class="empty-hint">Нажми + чтобы добавить</p>
+        <p class="empty-text" data-i18n="emptyTasks">Задач пока нет</p>
+        <p class="empty-hint" data-i18n="emptyTasksHint">Нажми + чтобы добавить</p>
       </div>
     </section>
 
-    <!-- Вкладка: Мини-задачи -->
+    <!-- Mini Tasks -->
     <section class="tab-panel" id="tab-mini">
       <div class="list-container" id="miniTaskList"></div>
       <div class="empty-state" id="emptyMini" style="display:none">
         <div class="empty-icon">⚡</div>
-        <p class="empty-text">Нет мини-задач</p>
-        <p class="empty-hint">Быстрые дела на сегодня</p>
+        <p class="empty-text" data-i18n="emptyMini">Нет мини-задач</p>
+        <p class="empty-hint" data-i18n="emptyMiniHint">Быстрые дела на сегодня</p>
       </div>
     </section>
 
-    <!-- Вкладка: Достижения -->
+    <!-- Achievements -->
     <section class="tab-panel" id="tab-achievements">
       <div class="achievements-container" id="achievementList"></div>
       <div class="empty-state" id="emptyAchievements" style="display:none">
         <div class="empty-icon">🏆</div>
-        <p class="empty-text">Пока нет достижений</p>
-        <p class="empty-hint">Выполни задачи и они появятся здесь</p>
+        <p class="empty-text" data-i18n="emptyAch">Пока нет достижений</p>
+        <p class="empty-hint" data-i18n="emptyAchHint">Выполни задачи и они появятся здесь</p>
       </div>
     </section>
 
-    <!-- Вкладка: Настройки -->
-    <section class="tab-panel" id="tab-settings">
-      <div class="settings-container">
-        <div class="settings-section">
-          <h3 class="settings-section-title">💾 Data Sync</h3>
-          <p class="settings-hint">Transfer tasks between devices instantly</p>
-
-          <button class="settings-btn settings-btn-primary" id="showExportBtn">
-            <span>📋</span> Show Export Code
-          </button>
-          <p class="settings-hint" id="exportHint">Tap to show data. Select all and copy (Ctrl+C).</p>
-
-          <textarea
-            id="exportArea"
-            class="paste-textarea"
-            placeholder="Export code will appear here. Select all and copy."
-            spellcheck="false"
-            readonly
-            style="display:none;"
-          ></textarea>
-
-          <textarea
-            id="pasteArea"
-            class="paste-textarea"
-            placeholder="Paste exported code here from another device and tap Load"
-            spellcheck="false"
-          ></textarea>
-
-          <button class="settings-btn settings-btn-secondary" id="loadBtn">
-            <span>📥</span> Load from Pasted Code
-          </button>
-        </div>
-
-        <div class="settings-section">
-          <h3 class="settings-section-title">📦 File Backup</h3>
-          <p class="settings-hint">Export/import JSON files</p>
-
-          <button class="settings-btn settings-btn-export" id="exportBtn">
-            <span>💾</span> Export as JSON
-          </button>
-
-          <label class="settings-btn settings-btn-import" id="importLabel">
-            <span>📂</span> Import from JSON
-            <input type="file" id="importInput" accept=".json" style="display:none;">
-          </label>
-        </div>
-
-        <div class="settings-section">
-          <h3 class="settings-section-title">⚙️ Storage</h3>
-          <div class="storage-info">
-            <div class="storage-item">
-              <span class="storage-label">Tasks</span>
-              <span class="storage-count" id="storageCount">0</span>
-            </div>
-            <div class="storage-item">
-              <span class="storage-label">Last reset</span>
-              <span class="storage-value" id="lastResetInfo">—</span>
-            </div>
-          </div>
-          <button class="settings-btn settings-btn-danger" id="clearBtn">
-            🗑️ Clear all data
-          </button>
-        </div>
-
-        <div class="settings-section">
-          <h3 class="settings-section-title">ℹ️ About</h3>
-          <p class="settings-hint">
-            Telegram Tasks Mini App — personal productivity tracker.<br>
-            <a href="https://github.com/Ilsur6767/tg-tasks-miniapp" target="_blank" style="color: var(--tg-theme-link-color);">View on GitHub</a>
-          </p>
-        </div>
+    <!-- Thoughts -->
+    <section class="tab-panel" id="tab-thoughts">
+      <div class="thoughts-list" id="thoughtsList"></div>
+      <div class="empty-state" id="emptyThoughts" style="display:none">
+        <div class="empty-icon">💭</div>
+        <p class="empty-text" data-i18n="emptyThoughts">Нет записей</p>
+        <p class="empty-hint" data-i18n="emptyThoughtsHint">Напиши свою первую мысль</p>
+      </div>
+      <div class="thoughts-input-bar" id="thoughtsInputBar">
+        <textarea
+          id="thoughtInput"
+          class="thought-textarea"
+          data-i18n-placeholder="thoughtPlaceholder"
+          placeholder="Напиши мысль..."
+          rows="1"
+        ></textarea>
+        <button class="thought-send-btn" id="thoughtSendBtn">↑</button>
       </div>
     </section>
 
@@ -135,28 +82,28 @@
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="tasks">
       <span class="tab-icon">✓</span>
-      <span class="tab-label">Задачи</span>
+      <span class="tab-label" data-i18n="tabTasks">Задачи</span>
     </button>
     <button class="tab-btn" data-tab="mini">
       <span class="tab-icon">⚡</span>
-      <span class="tab-label">Мини</span>
+      <span class="tab-label" data-i18n="tabMini">Мини</span>
     </button>
     <button class="tab-btn" data-tab="achievements">
       <span class="tab-icon">🏆</span>
-      <span class="tab-label">Победы</span>
+      <span class="tab-label" data-i18n="tabAch">Победы</span>
     </button>
-    <button class="tab-btn" data-tab="settings">
-      <span class="tab-icon">⚙️</span>
-      <span class="tab-label">Синхро</span>
+    <button class="tab-btn" data-tab="thoughts">
+      <span class="tab-icon">💭</span>
+      <span class="tab-label" data-i18n="tabThoughts">Мысли</span>
     </button>
   </nav>
 
-  <!-- FAB кнопка -->
-  <button class="fab" id="fabBtn" aria-label="Добавить задачу">
+  <!-- FAB -->
+  <button class="fab" id="fabBtn" aria-label="Add">
     <span class="fab-icon">+</span>
   </button>
 
-  <!-- Модальное окно -->
+  <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal" id="modal">
       <div class="modal-header">
@@ -167,46 +114,38 @@
           type="text"
           class="modal-input"
           id="modalInput"
-          placeholder="Название..."
           autocomplete="off"
           maxlength="100"
         >
         <div class="type-toggle" id="typeToggle">
           <button class="type-btn active" data-type="daily">
-            <span>🔄</span> Ежедневная
+            <span>🔄</span> <span data-i18n="typeDaily">Ежедневная</span>
           </button>
           <button class="type-btn" data-type="onetime">
-            <span>📌</span> Разовая
+            <span>📌</span> <span data-i18n="typeOnetime">Разовая</span>
           </button>
         </div>
-        <!-- Выбор дней недели (только для ежедневных) -->
         <div class="days-picker" id="daysPicker">
-          <span class="days-picker-label">Активна в дни:</span>
-          <div class="days-row">
-            <button class="day-btn active" data-day="0">Пн</button>
-            <button class="day-btn active" data-day="1">Вт</button>
-            <button class="day-btn active" data-day="2">Ср</button>
-            <button class="day-btn active" data-day="3">Чт</button>
-            <button class="day-btn active" data-day="4">Пт</button>
-            <button class="day-btn active" data-day="5">Сб</button>
-            <button class="day-btn active" data-day="6">Вс</button>
+          <span class="days-picker-label" data-i18n="activeDays">Активна в дни:</span>
+          <div class="days-row" id="daysRow">
+            <!-- Дни вставляются из JS для поддержки i18n -->
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn modal-btn-cancel" id="modalCancel">Отмена</button>
-        <button class="modal-btn modal-btn-save" id="modalSave">Сохранить</button>
+        <button class="modal-btn modal-btn-cancel" id="modalCancel" data-i18n="cancel">Отмена</button>
+        <button class="modal-btn modal-btn-save" id="modalSave" data-i18n="save">Сохранить</button>
       </div>
     </div>
   </div>
 
-  <!-- Контекстное меню -->
+  <!-- Context menu -->
   <div class="context-menu" id="contextMenu" style="display:none">
     <button class="context-item context-edit" id="ctxEdit">
-      <span>✏️</span> Редактировать
+      <span>✏️</span> <span data-i18n="ctxEdit">Редактировать</span>
     </button>
     <button class="context-item context-delete" id="ctxDelete">
-      <span>🗑️</span> Удалить
+      <span>🗑️</span> <span data-i18n="ctxDelete">Удалить</span>
     </button>
   </div>
 

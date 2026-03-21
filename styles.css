@@ -72,15 +72,44 @@ button {
   padding: 12px var(--app-spacing);
   display: flex;
   align-items: center;
-  /* Safe area для notch */
+  gap: 10px;
   padding-top: max(12px, env(safe-area-inset-top));
 }
 
 .header-content {
-  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* Language switcher */
+.lang-btn {
+  flex-shrink: 0;
+  width: 36px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--tg-theme-secondary-bg-color);
+  color: var(--tg-theme-hint-color);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lang-btn:active {
+  opacity: 0.7;
+  transform: scale(0.92);
+}
+
+.lang-btn.active-lang {
+  background: var(--tg-theme-button-color);
+  color: var(--tg-theme-button-text-color);
 }
 
 .progress-info {
@@ -910,6 +939,180 @@ button {
   background: var(--tg-theme-secondary-bg-color);
   padding: 2px 8px;
   border-radius: 20px;
+}
+
+/* ============================================================
+   THOUGHTS TAB — Дневник
+   ============================================================ */
+
+#tab-thoughts {
+  padding-bottom: calc(var(--thoughts-input-height) + 8px);
+}
+
+:root {
+  --thoughts-input-height: 64px;
+}
+
+/* Список записей */
+.thoughts-list {
+  padding: 12px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Карточка мысли */
+.thought-card {
+  margin: 0 var(--app-spacing);
+  background: var(--tg-theme-secondary-bg-color);
+  border-radius: var(--app-radius);
+  padding: 12px var(--app-spacing);
+  animation: thoughtEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes thoughtEnter {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.thought-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.thought-time {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tg-theme-button-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.thought-date {
+  font-size: 11px;
+  color: var(--tg-theme-hint-color);
+}
+
+.thought-delete-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(229, 57, 53, 0.1);
+  color: #e53935;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.thought-card:hover .thought-delete-btn,
+.thought-card.show-delete .thought-delete-btn {
+  opacity: 1;
+}
+
+.thought-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--tg-theme-text-color);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Разделитель даты */
+.thought-date-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px var(--app-spacing) 4px;
+}
+
+.thought-date-divider::before,
+.thought-date-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(128,128,128,0.15);
+}
+
+.thought-date-divider-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--tg-theme-hint-color);
+  white-space: nowrap;
+}
+
+/* Поле ввода */
+.thoughts-input-bar {
+  position: fixed;
+  bottom: var(--nav-height);
+  left: 0;
+  right: 0;
+  z-index: 150;
+  background: var(--tg-theme-bg-color);
+  border-top: 1px solid rgba(128,128,128,0.12);
+  padding: 10px var(--app-spacing);
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  display: none;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.thoughts-input-bar.visible {
+  display: flex;
+}
+
+.thought-textarea {
+  flex: 1;
+  background: var(--tg-theme-secondary-bg-color);
+  border: none;
+  border-radius: 20px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--tg-theme-text-color);
+  resize: none;
+  outline: none;
+  line-height: 1.4;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.thought-textarea::placeholder {
+  color: var(--tg-theme-hint-color);
+}
+
+.thought-send-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--tg-theme-button-color);
+  color: var(--tg-theme-button-text-color);
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, opacity 0.15s ease;
+}
+
+.thought-send-btn:active {
+  transform: scale(0.88);
+}
+
+.thought-send-btn:disabled {
+  opacity: 0.4;
 }
 
 /* ============================================================
