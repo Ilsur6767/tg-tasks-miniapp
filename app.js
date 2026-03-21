@@ -715,6 +715,10 @@ const UITasks = {
           ${daysHtml}
         </div>
         <span class="task-badge ${task.type}">${I18n.t('label' + task.type.charAt(0).toUpperCase() + task.type.slice(1))}</span>
+        <div class="task-hover-btns">
+          <button class="task-hover-btn" data-action="edit" title="${I18n.t('ctxEdit')}">✏️</button>
+          <button class="task-hover-btn is-delete" data-action="delete" title="${I18n.t('ctxDelete')}">✕</button>
+        </div>
       </div>
       <div class="task-actions">
         <button class="task-action-btn task-action-edit" data-action="edit">✏️</button>
@@ -730,8 +734,8 @@ const UITasks = {
       });
       el.querySelector('.task-text').addEventListener('click', () => el.querySelector('.task-checkbox').click());
     }
-    el.querySelector('[data-action="edit"]').addEventListener('click', () => this._openEdit(task));
-    el.querySelector('[data-action="delete"]').addEventListener('click', async () => { haptic('medium'); await Store.deleteTask(task.id); this.render(); });
+    el.querySelectorAll('[data-action="edit"]').forEach(b => b.addEventListener('click', () => this._openEdit(task)));
+    el.querySelectorAll('[data-action="delete"]').forEach(b => b.addEventListener('click', async () => { haptic('medium'); await Store.deleteTask(task.id); this.render(); }));
     return el;
   },
 
@@ -796,6 +800,10 @@ const UIMiniTasks = {
       <div class="mini-content">
         <div class="mini-checkbox ${task.completed ? 'checked' : ''}"></div>
         <span class="mini-text ${task.completed ? 'completed' : ''}">${escapeHtml(task.title)}</span>
+        <div class="mini-hover-btns">
+          <button class="task-hover-btn" data-action="edit" title="${I18n.t('ctxEdit')}">✏️</button>
+          <button class="task-hover-btn is-delete" data-action="delete" title="${I18n.t('ctxDelete')}">✕</button>
+        </div>
       </div>
       <div class="mini-actions">
         <button class="task-action-btn task-action-edit" data-action="edit">✏️</button>
@@ -808,8 +816,8 @@ const UIMiniTasks = {
       this.render(); UIAchievements.render();
     });
     el.querySelector('.mini-text').addEventListener('click', () => el.querySelector('.mini-checkbox').click());
-    el.querySelector('[data-action="edit"]').addEventListener('click', () => this._openEdit(task));
-    el.querySelector('[data-action="delete"]').addEventListener('click', async () => { await Store.deleteMiniTask(task.id); this.render(); });
+    el.querySelectorAll('[data-action="edit"]').forEach(b => b.addEventListener('click', () => this._openEdit(task)));
+    el.querySelectorAll('[data-action="delete"]').forEach(b => b.addEventListener('click', async () => { haptic('medium'); await Store.deleteMiniTask(task.id); this.render(); }));
     return el;
   },
 

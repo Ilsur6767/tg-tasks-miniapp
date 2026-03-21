@@ -934,9 +934,61 @@ button {
   transition: color var(--app-transition), border-color var(--app-transition), background var(--app-transition);
 }
 
+.clear-all-btn:hover,
 .clear-all-btn:active {
-  background: rgba(255, 59, 48, 0.1);
+  background: rgba(255, 59, 48, 0.08);
   border-color: #ff3b30;
+  color: #ff3b30;
+}
+
+/* ============================================================
+   HOVER-КНОПКИ ДЛЯ ДЕСКТОПА (редактировать / удалить)
+   ============================================================ */
+
+.task-hover-btns,
+.mini-hover-btns {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.task-item:hover .task-hover-btns,
+.mini-item:hover .mini-hover-btns {
+  opacity: 1;
+}
+
+/* На тач-устройствах прячем — там работает свайп */
+@media (hover: none) {
+  .task-hover-btns,
+  .mini-hover-btns { display: none; }
+}
+
+.task-hover-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.07);
+  color: var(--tg-theme-hint-color);
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.task-hover-btn:hover {
+  background: rgba(0,0,0,0.13);
+  color: var(--tg-theme-text-color);
+}
+
+.task-hover-btn.is-delete:hover {
+  background: rgba(255, 59, 48, 0.12);
   color: #ff3b30;
 }
 
