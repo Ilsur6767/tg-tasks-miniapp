@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <title>Мои задачи</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header с прогресс-баром -->
+  <header class="app-header" id="appHeader">
+    <div class="header-content">
+      <div class="progress-info">
+        <span class="progress-label-text">Прогресс дня</span>
+        <span class="progress-stats" id="progressStats">0 / 0</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Контент вкладок -->
+  <main class="main-content">
+
+    <!-- Вкладка: Задачи -->
+    <section class="tab-panel active" id="tab-tasks">
+      <div class="list-container" id="taskList"></div>
+      <div class="empty-state" id="emptyTasks" style="display:none">
+        <div class="empty-icon">📋</div>
+        <p class="empty-text">Задач пока нет</p>
+        <p class="empty-hint">Нажми + чтобы добавить</p>
+      </div>
+    </section>
+
+    <!-- Вкладка: Мини-задачи -->
+    <section class="tab-panel" id="tab-mini">
+      <div class="list-container" id="miniTaskList"></div>
+      <div class="empty-state" id="emptyMini" style="display:none">
+        <div class="empty-icon">⚡</div>
+        <p class="empty-text">Нет мини-задач</p>
+        <p class="empty-hint">Быстрые дела на сегодня</p>
+      </div>
+    </section>
+
+    <!-- Вкладка: Достижения -->
+    <section class="tab-panel" id="tab-achievements">
+      <div class="achievements-container" id="achievementList"></div>
+      <div class="empty-state" id="emptyAchievements" style="display:none">
+        <div class="empty-icon">🏆</div>
+        <p class="empty-text">Пока нет достижений</p>
+        <p class="empty-hint">Выполни задачи и они появятся здесь</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Нижняя навигация -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="tasks">
+      <span class="tab-icon">✓</span>
+      <span class="tab-label">Задачи</span>
+    </button>
+    <button class="tab-btn" data-tab="mini">
+      <span class="tab-icon">⚡</span>
+      <span class="tab-label">Мини</span>
+    </button>
+    <button class="tab-btn" data-tab="achievements">
+      <span class="tab-icon">🏆</span>
+      <span class="tab-label">Победы</span>
+    </button>
+  </nav>
+
+  <!-- FAB кнопка -->
+  <button class="fab" id="fabBtn" aria-label="Добавить задачу">
+    <span class="fab-icon">+</span>
+  </button>
+
+  <!-- Модальное окно -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Новая задача</h3>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          class="modal-input"
+          id="modalInput"
+          placeholder="Название..."
+          autocomplete="off"
+          maxlength="100"
+        >
+        <div class="type-toggle" id="typeToggle">
+          <button class="type-btn active" data-type="daily">
+            <span>🔄</span> Ежедневная
+          </button>
+          <button class="type-btn" data-type="onetime">
+            <span>📌</span> Разовая
+          </button>
+        </div>
+        <!-- Выбор дней недели (только для ежедневных) -->
+        <div class="days-picker" id="daysPicker">
+          <span class="days-picker-label">Активна в дни:</span>
+          <div class="days-row">
+            <button class="day-btn active" data-day="0">Пн</button>
+            <button class="day-btn active" data-day="1">Вт</button>
+            <button class="day-btn active" data-day="2">Ср</button>
+            <button class="day-btn active" data-day="3">Чт</button>
+            <button class="day-btn active" data-day="4">Пт</button>
+            <button class="day-btn active" data-day="5">Сб</button>
+            <button class="day-btn active" data-day="6">Вс</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" id="modalCancel">Отмена</button>
+        <button class="modal-btn modal-btn-save" id="modalSave">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Контекстное меню -->
+  <div class="context-menu" id="contextMenu" style="display:none">
+    <button class="context-item context-edit" id="ctxEdit">
+      <span>✏️</span> Редактировать
+    </button>
+    <button class="context-item context-delete" id="ctxDelete">
+      <span>🗑️</span> Удалить
+    </button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
