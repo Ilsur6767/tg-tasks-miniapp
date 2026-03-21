@@ -947,22 +947,24 @@ button {
 
 .task-hover-btns,
 .mini-hover-btns {
-  display: flex;
+  display: none;
   gap: 4px;
   flex-shrink: 0;
-  opacity: 0;
-  transition: opacity 0.15s ease;
 }
 
-.task-item:hover .task-hover-btns,
-.mini-item:hover .mini-hover-btns {
-  opacity: 1;
-}
-
-/* На тач-устройствах прячем — там работает свайп */
-@media (hover: none) {
+/* Показываем только на десктопе */
+@media (hover: hover) {
   .task-hover-btns,
-  .mini-hover-btns { display: none; }
+  .mini-hover-btns {
+    display: flex;
+    opacity: 0.45;
+    transition: opacity 0.15s ease;
+  }
+
+  .task-item:hover .task-hover-btns,
+  .mini-item:hover .mini-hover-btns {
+    opacity: 1;
+  }
 }
 
 .task-hover-btn {
