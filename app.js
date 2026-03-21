@@ -53,6 +53,10 @@ const I18n = {
       confirmDeleteAll:  'Удалить ВСЕ данные? Это нельзя отменить.',
       confirmDeleteAll2: 'Последний шанс. Точно удалить?',
       confirmDeleteThought: 'Удалить запись?',
+      clearAll:             'Очистить всё',
+      confirmClearThoughts: 'Удалить все мысли? Это нельзя отменить.',
+      confirmClearTasks:    'Удалить все задачи? Это нельзя отменить.',
+      confirmClearMini:     'Удалить все мини-задачи? Это нельзя отменить.',
       days: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
     },
     en: {
@@ -94,6 +98,10 @@ const I18n = {
       confirmDeleteAll:  'Delete ALL data? This cannot be undone.',
       confirmDeleteAll2: 'Last chance. Are you sure?',
       confirmDeleteThought: 'Delete this entry?',
+      clearAll:             'Clear all',
+      confirmClearThoughts: 'Delete all thoughts? This cannot be undone.',
+      confirmClearTasks:    'Delete all tasks? This cannot be undone.',
+      confirmClearMini:     'Delete all quick tasks? This cannot be undone.',
       days: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
     },
   },
@@ -353,6 +361,10 @@ const Store = {
   async deleteThought(id) {
     await this.saveThoughts((await this.getThoughts()).filter(t => t.id !== id));
   },
+
+  async clearThoughts()  { await this.saveThoughts([]); },
+  async clearTasks()     { await this.saveTasks([]); await this.saveAchievements([]); },
+  async clearMiniTasks() { await this.saveMiniTasks([]); },
 };
 
 // ============================================================
@@ -642,6 +654,13 @@ const UITasks = {
     if (!tasks.length) { this.emptyEl.style.display = 'flex'; await Progress.update(); return; }
     this.emptyEl.style.display = 'none';
 
+    this.listEl.appendChild(this._clearBar(I18n.t('confirmClearTasks'), async () => {
+      haptic('medium');
+      await Store.clearTasks();
+      this.render();
+      UIAchievements.render();
+    }));
+
     const dailyActive   = tasks.filter(t => t.type === 'daily' && isTaskActiveToday(t));
     const dailyInactive = tasks.filter(t => t.type === 'daily' && !isTaskActiveToday(t));
     const onetime       = tasks.filter(t => t.type === 'onetime');
@@ -651,6 +670,17 @@ const UITasks = {
     if (onetime.length)       { this.listEl.appendChild(this._header(I18n.t('sectionOnetime'), onetime.length)); onetime.forEach(t => this.listEl.appendChild(this._taskEl(t))); }
 
     await Progress.update();
+  },
+
+  _clearBar(confirmMsg, onConfirm) {
+    const bar = document.createElement('div');
+    bar.className = 'clear-all-bar';
+    const btn = document.createElement('button');
+    btn.className = 'clear-all-btn';
+    btn.textContent = I18n.t('clearAll');
+    btn.addEventListener('click', () => { if (confirm(confirmMsg)) onConfirm(); });
+    bar.appendChild(btn);
+    return bar;
   },
 
   _header(label, count) {
@@ -735,6 +765,18 @@ const UIMiniTasks = {
     this.listEl.innerHTML = '';
     if (!tasks.length) { this.emptyEl.style.display = 'flex'; return; }
     this.emptyEl.style.display = 'none';
+
+    const clearBar = document.createElement('div');
+    clearBar.className = 'clear-all-bar';
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'clear-all-btn';
+    clearBtn.textContent = I18n.t('clearAll');
+    clearBtn.addEventListener('click', () => {
+      if (confirm(I18n.t('confirmClearMini'))) { haptic('medium'); Store.clearMiniTasks().then(() => this.render()); }
+    });
+    clearBar.appendChild(clearBtn);
+    this.listEl.appendChild(clearBar);
+
     const pending   = tasks.filter(t => !t.completed);
     const completed = tasks.filter(t => t.completed);
     pending.forEach(t => this.listEl.appendChild(this._miniEl(t)));
@@ -879,6 +921,17 @@ const UIThoughts = {
 
     if (!thoughts.length) { this.emptyEl.style.display = 'flex'; return; }
     this.emptyEl.style.display = 'none';
+
+    const clearBar = document.createElement('div');
+    clearBar.className = 'clear-all-bar';
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'clear-all-btn';
+    clearBtn.textContent = I18n.t('clearAll');
+    clearBtn.addEventListener('click', () => {
+      if (confirm(I18n.t('confirmClearThoughts'))) { haptic('medium'); Store.clearThoughts().then(() => this.render()); }
+    });
+    clearBar.appendChild(clearBtn);
+    this.listEl.appendChild(clearBar);
 
     // Группировка по дате
     const groups = {};

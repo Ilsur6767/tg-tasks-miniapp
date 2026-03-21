@@ -914,6 +914,33 @@ button {
 }
 
 /* ============================================================
+   CLEAR ALL BUTTON
+   ============================================================ */
+
+.clear-all-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px var(--app-spacing) 2px;
+}
+
+.clear-all-btn {
+  background: none;
+  border: 1px solid var(--tg-theme-hint-color);
+  color: var(--tg-theme-hint-color);
+  border-radius: 20px;
+  font-size: 12px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: color var(--app-transition), border-color var(--app-transition), background var(--app-transition);
+}
+
+.clear-all-btn:active {
+  background: rgba(255, 59, 48, 0.1);
+  border-color: #ff3b30;
+  color: #ff3b30;
+}
+
+/* ============================================================
    SECTION HEADER (разделители в списке)
    ============================================================ */
 
