@@ -55,6 +55,50 @@
       </div>
     </section>
 
+    <!-- Вкладка: Настройки -->
+    <section class="tab-panel" id="tab-settings">
+      <div class="settings-container">
+        <div class="settings-section">
+          <h3 class="settings-section-title">💾 Data Sync</h3>
+          <p class="settings-hint">Transfer your tasks between devices</p>
+
+          <button class="settings-btn settings-btn-export" id="exportBtn">
+            <span>📥</span> Export as JSON
+          </button>
+
+          <label class="settings-btn settings-btn-import" id="importLabel">
+            <span>📤</span> Import from JSON
+            <input type="file" id="importInput" accept=".json" style="display:none;">
+          </label>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">⚙️ Storage</h3>
+          <div class="storage-info">
+            <div class="storage-item">
+              <span class="storage-label">Tasks</span>
+              <span class="storage-count" id="storageCount">0</span>
+            </div>
+            <div class="storage-item">
+              <span class="storage-label">Last reset</span>
+              <span class="storage-value" id="lastResetInfo">—</span>
+            </div>
+          </div>
+          <button class="settings-btn settings-btn-danger" id="clearBtn">
+            🗑️ Clear all data
+          </button>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">ℹ️ About</h3>
+          <p class="settings-hint">
+            Telegram Tasks Mini App — personal productivity tracker.<br>
+            <a href="https://github.com/Ilsur6767/tg-tasks-miniapp" target="_blank" style="color: var(--tg-theme-link-color);">View on GitHub</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Нижняя навигация -->
@@ -70,6 +114,10 @@
     <button class="tab-btn" data-tab="achievements">
       <span class="tab-icon">🏆</span>
       <span class="tab-label">Победы</span>
+    </button>
+    <button class="tab-btn" data-tab="settings">
+      <span class="tab-icon">⚙️</span>
+      <span class="tab-label">Синхро</span>
     </button>
   </nav>
 

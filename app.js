@@ -828,6 +828,50 @@ const UIMiniTasks = {
 };
 
 // ============================================================
+// UI.Settings — вкладка Настройки
+// ============================================================
+
+const UISettings = {
+  exportBtn: document.getElementById('exportBtn'),
+  importInput: document.getElementById('importInput'),
+  importLabel: document.getElementById('importLabel'),
+  clearBtn: document.getElementById('clearBtn'),
+  storageCountEl: document.getElementById('storageCount'),
+  lastResetEl: document.getElementById('lastResetInfo'),
+
+  init() {
+    this.exportBtn.addEventListener('click', () => {
+      haptic('light');
+      DataSync.exportData();
+    });
+
+    this.importInput.addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        DataSync.importData(e.target.files[0]);
+        e.target.value = '';
+      }
+    });
+
+    this.clearBtn.addEventListener('click', () => {
+      haptic('medium');
+      DataSync.clearAll();
+    });
+  },
+
+  updateStorageInfo() {
+    const totalItems = Store.getTasks().length + Store.getMiniTasks().length;
+    this.storageCountEl.textContent = totalItems.toString();
+
+    const lastReset = Store.getLastReset();
+    if (lastReset && lastReset !== todayString()) {
+      this.lastResetEl.textContent = formatDateLabel(lastReset);
+    } else {
+      this.lastResetEl.textContent = 'Today';
+    }
+  },
+};
+
+// ============================================================
 // UI.Achievements — вкладка Достижения
 // ============================================================
 
@@ -905,6 +949,7 @@ const UITabs = {
     tasks:        document.getElementById('tab-tasks'),
     mini:         document.getElementById('tab-mini'),
     achievements: document.getElementById('tab-achievements'),
+    settings:     document.getElementById('tab-settings'),
   },
 
   init() {
@@ -942,6 +987,80 @@ const UITabs = {
     if (tab === 'tasks')        UITasks.render();
     if (tab === 'mini')         UIMiniTasks.render();
     if (tab === 'achievements') UIAchievements.render();
+    if (tab === 'settings')     UISettings.updateStorageInfo();
+  },
+};
+
+// ============================================================
+// DataSync — экспорт/импорт
+// ============================================================
+
+const DataSync = {
+  exportData() {
+    const data = {
+      version: '1.0',
+      exportedAt: new Date().toISOString(),
+      tasks: Store.getTasks(),
+      miniTasks: Store.getMiniTasks(),
+      achievements: Store.getAchievements(),
+    };
+
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tasks-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    hapticNotify('success');
+  },
+
+  importData(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+
+        if (!data.tasks || !data.miniTasks || !data.achievements) {
+          alert('❌ Invalid backup file format');
+          return;
+        }
+
+        // Подтверждение перед перезаписью
+        if (!confirm('⚠️ This will replace all current data. Continue?')) {
+          return;
+        }
+
+        Store.saveTasks(data.tasks || []);
+        Store.saveMiniTasks(data.miniTasks || []);
+        Store.saveAchievements(data.achievements || []);
+
+        hapticNotify('success');
+        alert('✅ Data imported successfully!');
+
+        // Перезагрузить UI
+        UITabs.switchTo('tasks');
+        UITasks.render();
+        UIMiniTasks.render();
+        UIAchievements.render();
+        UISettings.updateStorageInfo();
+      } catch (err) {
+        alert('❌ Error importing file: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  },
+
+  clearAll() {
+    if (!confirm('🗑️ Delete ALL data? This cannot be undone.')) return;
+    if (!confirm('Are you sure? Last chance to back up.')) return;
+
+    localStorage.clear();
+    hapticNotify('success');
+    alert('✅ All data cleared');
+    location.reload();
   },
 };
 
@@ -1016,17 +1135,19 @@ const App = {
     UITabs.init();
     UITasks.init();
     UIMiniTasks.init();
+    UISettings.init();
     FAB.init();
 
     // Начальный рендер
     UITasks.render();
     Progress.update();
+    UISettings.updateStorageInfo();
 
-    // Скрыть FAB на вкладке достижений
+    // Скрыть FAB на вкладках достижений и настроек
     const origSwitch = UITabs.switchTo.bind(UITabs);
     UITabs.switchTo = function(tab) {
       origSwitch(tab);
-      FAB.btn.style.display = tab === 'achievements' ? 'none' : '';
+      FAB.btn.style.display = (tab === 'achievements' || tab === 'settings') ? 'none' : '';
     };
   },
 };
