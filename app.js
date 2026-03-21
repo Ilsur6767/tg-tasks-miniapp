@@ -832,6 +832,9 @@ const UIMiniTasks = {
 // ============================================================
 
 const UISettings = {
+  copyBtn: document.getElementById('copyBtn'),
+  pasteArea: document.getElementById('pasteArea'),
+  loadBtn: document.getElementById('loadBtn'),
   exportBtn: document.getElementById('exportBtn'),
   importInput: document.getElementById('importInput'),
   importLabel: document.getElementById('importLabel'),
@@ -840,11 +843,26 @@ const UISettings = {
   lastResetEl: document.getElementById('lastResetInfo'),
 
   init() {
+    // Copy to clipboard
+    this.copyBtn.addEventListener('click', () => {
+      haptic('light');
+      DataSync.copyToClipboard();
+    });
+
+    // Load from textarea
+    this.loadBtn.addEventListener('click', () => {
+      haptic('light');
+      const text = this.pasteArea.value;
+      DataSync.loadFromText(text);
+    });
+
+    // Export as JSON
     this.exportBtn.addEventListener('click', () => {
       haptic('light');
       DataSync.exportData();
     });
 
+    // Import from JSON
     this.importInput.addEventListener('change', (e) => {
       if (e.target.files[0]) {
         DataSync.importData(e.target.files[0]);
@@ -852,6 +870,7 @@ const UISettings = {
       }
     });
 
+    // Clear all
     this.clearBtn.addEventListener('click', () => {
       haptic('medium');
       DataSync.clearAll();
@@ -996,6 +1015,86 @@ const UITabs = {
 // ============================================================
 
 const DataSync = {
+  // Кодировать данные в Base64
+  _encode(data) {
+    const json = JSON.stringify(data);
+    return btoa(unescape(encodeURIComponent(json)));
+  },
+
+  // Декодировать данные из Base64
+  _decode(encoded) {
+    const json = decodeURIComponent(escape(atob(encoded)));
+    return JSON.parse(json);
+  },
+
+  // Копировать в буфер обмена
+  async copyToClipboard() {
+    try {
+      const data = {
+        v: '1',
+        tasks: Store.getTasks(),
+        mini: Store.getMiniTasks(),
+        ach: Store.getAchievements(),
+      };
+      const encoded = this._encode(data);
+
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(encoded);
+      } else {
+        // Fallback для старых браузеров
+        const textarea = document.createElement('textarea');
+        textarea.value = encoded;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
+      hapticNotify('success');
+      alert('✅ Data copied to clipboard!');
+    } catch (err) {
+      alert('❌ Failed to copy: ' + err.message);
+    }
+  },
+
+  // Загрузить из текстового поля
+  async loadFromText(text) {
+    try {
+      const trimmed = text.trim();
+      if (!trimmed) {
+        alert('❌ Paste data first');
+        return;
+      }
+
+      const data = this._decode(trimmed);
+
+      if (!data.tasks || !data.mini || !data.ach) {
+        alert('❌ Invalid data format');
+        return;
+      }
+
+      if (!confirm('⚠️ Replace all current data?')) {
+        return;
+      }
+
+      Store.saveTasks(data.tasks);
+      Store.saveMiniTasks(data.mini);
+      Store.saveAchievements(data.ach);
+
+      hapticNotify('success');
+      alert('✅ Data loaded successfully!');
+
+      UITabs.switchTo('tasks');
+      UITasks.render();
+      UIMiniTasks.render();
+      UIAchievements.render();
+      UISettings.updateStorageInfo();
+    } catch (err) {
+      alert('❌ Error loading data: ' + err.message);
+    }
+  },
+
+  // Экспортировать как JSON файл
   exportData() {
     const data = {
       version: '1.0',
@@ -1017,6 +1116,7 @@ const DataSync = {
     hapticNotify('success');
   },
 
+  // Импортировать из JSON файла
   importData(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -1028,8 +1128,7 @@ const DataSync = {
           return;
         }
 
-        // Подтверждение перед перезаписью
-        if (!confirm('⚠️ This will replace all current data. Continue?')) {
+        if (!confirm('⚠️ Replace all current data?')) {
           return;
         }
 
@@ -1040,7 +1139,6 @@ const DataSync = {
         hapticNotify('success');
         alert('✅ Data imported successfully!');
 
-        // Перезагрузить UI
         UITabs.switchTo('tasks');
         UITasks.render();
         UIMiniTasks.render();

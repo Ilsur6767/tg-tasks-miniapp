@@ -60,14 +60,35 @@
       <div class="settings-container">
         <div class="settings-section">
           <h3 class="settings-section-title">💾 Data Sync</h3>
-          <p class="settings-hint">Transfer your tasks between devices</p>
+          <p class="settings-hint">Transfer tasks between devices instantly</p>
+
+          <button class="settings-btn settings-btn-primary" id="copyBtn">
+            <span>📋</span> Copy to Clipboard
+          </button>
+          <p class="settings-hint">Tap to copy all data. Then paste on another device.</p>
+
+          <textarea
+            id="pasteArea"
+            class="paste-textarea"
+            placeholder="Or paste data here from another device and tap Load"
+            spellcheck="false"
+          ></textarea>
+
+          <button class="settings-btn settings-btn-secondary" id="loadBtn">
+            <span>📥</span> Load from Text
+          </button>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">📦 File Backup</h3>
+          <p class="settings-hint">Export/import JSON files</p>
 
           <button class="settings-btn settings-btn-export" id="exportBtn">
-            <span>📥</span> Export as JSON
+            <span>💾</span> Export as JSON
           </button>
 
           <label class="settings-btn settings-btn-import" id="importLabel">
-            <span>📤</span> Import from JSON
+            <span>📂</span> Import from JSON
             <input type="file" id="importInput" accept=".json" style="display:none;">
           </label>
         </div>

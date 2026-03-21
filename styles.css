@@ -975,6 +975,42 @@ button {
   background: #e53935;
 }
 
+.settings-btn-primary {
+  background: var(--tg-theme-button-color);
+}
+
+.settings-btn-secondary {
+  background: var(--tg-theme-link-color);
+}
+
+.settings-btn-export,
+.settings-btn-import {
+  background: #34a853;
+}
+
+.paste-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px var(--app-spacing);
+  border: 1px solid rgba(128,128,128,0.2);
+  border-radius: var(--app-radius-sm);
+  background: var(--tg-theme-secondary-bg-color);
+  color: var(--tg-theme-text-color);
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  resize: vertical;
+  margin-bottom: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.paste-textarea:focus {
+  outline: none;
+  border-color: var(--tg-theme-button-color);
+  box-shadow: 0 0 0 2px rgba(36, 129, 204, 0.1);
+}
+
 .storage-info {
   display: flex;
   flex-direction: column;
