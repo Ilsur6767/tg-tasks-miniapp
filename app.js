@@ -403,12 +403,18 @@ const Store = {
 
 async function sendBotMessage(token, chatId, text) {
   try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const res  = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
     });
-  } catch(e) { /* silent fail */ }
+    const data = await res.json();
+    if (!data.ok) {
+      Toast.show(`Bot error: ${data.description}`, 'error', 8000);
+    }
+  } catch(e) {
+    Toast.show(`Network error: ${e.message}`, 'error', 8000);
+  }
 }
 
 // ============================================================
