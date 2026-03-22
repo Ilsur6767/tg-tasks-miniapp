@@ -55,13 +55,6 @@ const I18n = {
       deadlineSoon:         'Скоро дедлайн',
       subtaskPlaceholder:   'Новая подзадача...',
       addSubtaskBtn:        '+ подзадача',
-      tabSettings:          'Настройки',
-      settingsBot:          'Уведомления',
-      settingsBotDesc:      'Введи токен бота чтобы получать сообщение в Telegram за 3 часа до дедлайна',
-      settingsBotToken:     'Bot Token',
-      settingsSave:         'Сохранить',
-      settingsTokenSaved:   'Токен сохранён ✓',
-      settingsTokenCleared: 'Токен удалён',
       days: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
     },
     en: {
@@ -105,13 +98,6 @@ const I18n = {
       deadlineSoon:         'Deadline soon',
       subtaskPlaceholder:   'New subtask...',
       addSubtaskBtn:        '+ subtask',
-      tabSettings:          'Settings',
-      settingsBot:          'Notifications',
-      settingsBotDesc:      'Enter bot token to receive a Telegram message 3 hours before deadline',
-      settingsBotToken:     'Bot Token',
-      settingsSave:         'Save',
-      settingsTokenSaved:   'Token saved ✓',
-      settingsTokenCleared: 'Token cleared',
       days: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
     },
   },
@@ -144,9 +130,8 @@ const I18n = {
 
 const Config = {
   PREFIXES: { TASKS: 'tma_tasks', ACH: 'tma_ach', THOUGHTS: 'tma_thoughts' },
-  KEYS:     { RESET: 'tma_reset', LANG: 'tma_lang', BOT_TOKEN: 'tma_bot_token' },
+  KEYS:     { RESET: 'tma_reset', LANG: 'tma_lang' },
   CHUNK_SIZE: 800,
-  DEADLINE_WARN_MS: 3 * 60 * 60 * 1000, // 3 hours
 };
 
 // ============================================================
@@ -190,27 +175,37 @@ function formatDateLabel(dateStr) {
   return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
 }
 
-function formatDeadline(ts) {
-  const now = Date.now();
-  const diff = ts - now;
-  const d = new Date(ts);
-  const months = I18n.current === 'ru'
-    ? ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек']
-    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const dateStr = `${d.getDate()} ${months[d.getMonth()]}, ${formatTime(ts)}`;
+function deadlineProgress(task) {
+  const now     = Date.now();
+  const created = task.createdAt || (task.deadline - 86400000);
+  const total   = task.deadline - created;
+  const elapsed = now - created;
+  const pct     = Math.min(100, Math.max(4, total > 0 ? (elapsed / total) * 100 : 100));
+
+  const diff = task.deadline - now;
+  let color, label;
 
   if (diff < 0) {
-    return { text: `🔴 ${I18n.t('deadlineOverdue')} · ${dateStr}`, cls: 'deadline-overdue' };
-  }
-  if (diff < Config.DEADLINE_WARN_MS) {
+    color = '#c62828';
+    label = I18n.current === 'ru' ? 'просрочено' : 'overdue';
+  } else {
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
-    const timeLeft = h > 0
-      ? (I18n.current === 'ru' ? `${h}ч ${m}м` : `${h}h ${m}m`)
-      : (I18n.current === 'ru' ? `${m}м` : `${m}m`);
-    return { text: `⏰ ${timeLeft}`, cls: 'deadline-soon' };
+    const d = Math.floor(h / 24);
+    label = d >= 2
+      ? (I18n.current === 'ru' ? `${d}д` : `${d}d`)
+      : d === 1
+        ? (I18n.current === 'ru' ? '1д' : '1d')
+        : h > 0
+          ? (I18n.current === 'ru' ? `${h}ч ${m}м` : `${h}h ${m}m`)
+          : (I18n.current === 'ru' ? `${m}м` : `${m}m`);
+    color = diff < 3600000   ? '#e53935'
+          : diff < 21600000  ? '#f57c00'
+          : diff < 86400000  ? '#f9ab00'
+          : '#43a047';
   }
-  return { text: `📅 ${dateStr}`, cls: 'deadline-normal' };
+
+  return { pct, color, label };
 }
 
 function haptic(type = 'light') {
@@ -318,8 +313,6 @@ const Store = {
   async setLastReset(d){ return CloudStore.set(Config.KEYS.RESET, d); },
   async getLang()      { return CloudStore.get(Config.KEYS.LANG); },
   async setLang(l)     { return CloudStore.set(Config.KEYS.LANG, l); },
-  async getBotToken()  { return CloudStore.get(Config.KEYS.BOT_TOKEN); },
-  async setBotToken(t) { return CloudStore.set(Config.KEYS.BOT_TOKEN, t); },
 
   async addTask(title, type, days = [], deadline = null) {
     const tasks = await this.getTasks();
@@ -396,26 +389,6 @@ const Store = {
   async clearThoughts() { await this.saveThoughts([]); },
   async clearTasks()    { await this.saveTasks([]); await this.saveAchievements([]); },
 };
-
-// ============================================================
-// Bot API
-// ============================================================
-
-async function sendBotMessage(token, chatId, text) {
-  try {
-    const res  = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
-    });
-    const data = await res.json();
-    if (!data.ok) {
-      Toast.show(`Bot error: ${data.description}`, 'error', 8000);
-    }
-  } catch(e) {
-    Toast.show(`Network error: ${e.message}`, 'error', 8000);
-  }
-}
 
 // ============================================================
 // DailyReset
@@ -698,57 +671,6 @@ const Toast = {
 };
 
 // ============================================================
-// DeadlineChecker
-// ============================================================
-
-const DeadlineChecker = {
-  async run() {
-    const tasks = await Store.getTasks();
-    const now   = Date.now();
-    const warn  = Config.DEADLINE_WARN_MS;
-
-    const urgent = tasks.filter(t =>
-      !t.completed &&
-      t.deadline &&
-      (t.deadline - now) < warn
-    );
-
-    urgent.forEach(task => {
-      const diff = task.deadline - now;
-      let msg;
-      if (diff < 0) {
-        msg = I18n.current === 'ru'
-          ? `🔴 Просрочено: «${task.title}»`
-          : `🔴 Overdue: "${task.title}"`;
-      } else {
-        const h = Math.floor(diff / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const timeLeft = h > 0
-          ? (I18n.current === 'ru' ? `${h}ч ${m}м` : `${h}h ${m}m`)
-          : (I18n.current === 'ru' ? `${m}м` : `${m}m`);
-        msg = I18n.current === 'ru'
-          ? `⏰ Дедлайн через ${timeLeft}: «${task.title}»`
-          : `⏰ Deadline in ${timeLeft}: "${task.title}"`;
-      }
-      Toast.show(msg, diff < 0 ? 'error' : 'warning', 7000);
-    });
-
-    // Send real Telegram message if bot token is configured
-    const token  = await Store.getBotToken();
-    const chatId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
-    if (token && chatId && urgent.length) {
-      for (const task of urgent) {
-        const diff = task.deadline - Date.now();
-        const text = diff < 0
-          ? `🔴 Просрочено: <b>${task.title}</b>`
-          : `⏰ Дедлайн скоро: <b>${task.title}</b>`;
-        await sendBotMessage(token, chatId, text);
-      }
-    }
-  },
-};
-
-// ============================================================
 // Progress
 // ============================================================
 
@@ -848,11 +770,13 @@ const UITasks = {
       daysHtml = `<div class="task-days">${dots}</div>`;
     }
 
-    // Deadline badge
-    let deadlineHtml = '';
-    if (task.deadline) {
-      const { text, cls } = formatDeadline(task.deadline);
-      deadlineHtml = `<div class="task-deadline ${cls}">${escapeHtml(text)}</div>`;
+    // Deadline bar
+    let deadlineBarHtml  = '';
+    let deadlineChipHtml = '';
+    if (task.deadline && !task.completed) {
+      const { pct, color, label } = deadlineProgress(task);
+      deadlineBarHtml  = `<div class="deadline-bar"><div class="deadline-bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
+      deadlineChipHtml = `<span class="deadline-chip" style="color:${color}">${escapeHtml(label)}</span>`;
     }
 
     // Subtask progress badge
@@ -872,11 +796,10 @@ const UITasks = {
         <div class="task-body">
           <span class="task-text ${task.completed ? 'completed' : ''}">${escapeHtml(task.title)}</span>
           ${daysHtml}
-          ${deadlineHtml}
+          ${deadlineChipHtml}
         </div>
         <div class="task-meta">
           ${subBadge}
-          <span class="task-badge ${task.type}">${I18n.t('label' + task.type.charAt(0).toUpperCase() + task.type.slice(1))}</span>
           <button class="task-expand-btn" data-action="expand" title="subtasks">${expandIcon}</button>
         </div>
         <div class="task-hover-btns">
@@ -884,6 +807,7 @@ const UITasks = {
           <button class="task-hover-btn is-delete" data-action="delete" title="${I18n.t('ctxDelete')}">✕</button>
         </div>
       </div>
+      ${deadlineBarHtml}
       <div class="task-actions">
         <button class="task-action-btn task-action-edit" data-action="edit">✏️</button>
         <button class="task-action-btn task-action-delete" data-action="delete">🗑️</button>
@@ -1152,30 +1076,7 @@ const LangSwitcher = {
       if (tab === 'tasks')        await UITasks.render();
       if (tab === 'achievements') await UIAchievements.render();
       if (tab === 'thoughts')     await UIThoughts.render();
-      if (tab === 'settings')     await UISettings.show();
     });
-  },
-};
-
-// ============================================================
-// UI.Settings
-// ============================================================
-
-const UISettings = {
-  init() {
-    document.getElementById('saveTokenBtn').addEventListener('click', async () => {
-      haptic('light');
-      const val    = document.getElementById('botTokenInput').value.trim();
-      const status = document.getElementById('tokenStatus');
-      await Store.setBotToken(val);
-      status.textContent = val ? I18n.t('settingsTokenSaved') : I18n.t('settingsTokenCleared');
-      setTimeout(() => { status.textContent = ''; }, 2500);
-    });
-  },
-
-  async show() {
-    const token = await Store.getBotToken();
-    document.getElementById('botTokenInput').value = token || '';
   },
 };
 
@@ -1189,7 +1090,6 @@ const UITabs = {
     tasks:        document.getElementById('tab-tasks'),
     achievements: document.getElementById('tab-achievements'),
     thoughts:     document.getElementById('tab-thoughts'),
-    settings:     document.getElementById('tab-settings'),
   },
 
   init() {
@@ -1210,13 +1110,12 @@ const UITabs = {
     header.style.display = tab === 'tasks' ? '' : 'none';
     main.style.top       = tab === 'tasks' ? 'var(--header-height)' : '0';
 
-    document.getElementById('fabBtn').style.display = (['achievements','thoughts','settings'].includes(tab)) ? 'none' : '';
+    document.getElementById('fabBtn').style.display = (tab === 'achievements' || tab === 'thoughts') ? 'none' : '';
     tab === 'thoughts' ? UIThoughts.show() : UIThoughts.hide();
 
     if (tab === 'tasks')        await UITasks.render();
     if (tab === 'achievements') await UIAchievements.render();
     if (tab === 'thoughts')     await UIThoughts.render();
-    if (tab === 'settings')     await UISettings.show();
   },
 };
 
@@ -1277,15 +1176,11 @@ const App = {
     UIThoughts.init();
     FAB.init();
     LangSwitcher.init();
-    UISettings.init();
 
     await UITasks.render();
 
     document.body.style.transition = 'opacity 0.25s ease';
     document.body.style.opacity    = '1';
-
-    // Check for upcoming deadlines after render
-    setTimeout(() => DeadlineChecker.run(), 600);
   },
 };
 
