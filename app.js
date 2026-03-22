@@ -717,20 +717,20 @@ const UITasks = {
     if (!tasks.length) { this.emptyEl.style.display = 'flex'; await Progress.update(); return; }
     this.emptyEl.style.display = 'none';
 
+    const dailyActive   = tasks.filter(t => t.type === 'daily' && isTaskActiveToday(t));
+    const dailyInactive = tasks.filter(t => t.type === 'daily' && !isTaskActiveToday(t));
+    const onetime       = tasks.filter(t => t.type === 'onetime');
+
+    if (dailyActive.length)   { this.listEl.appendChild(this._header(I18n.t('sectionDaily'))); dailyActive.forEach(t => this.listEl.appendChild(this._taskEl(t))); }
+    if (dailyInactive.length) { this.listEl.appendChild(this._header(I18n.t('sectionNotToday'))); dailyInactive.forEach(t => this.listEl.appendChild(this._taskEl(t, true))); }
+    if (onetime.length)       { this.listEl.appendChild(this._header(I18n.t('sectionOnetime'))); onetime.forEach(t => this.listEl.appendChild(this._taskEl(t))); }
+
     this.listEl.appendChild(this._clearBar(I18n.t('confirmClearTasks'), async () => {
       haptic('medium');
       await Store.clearTasks();
       this.render();
       UIAchievements.render();
     }));
-
-    const dailyActive   = tasks.filter(t => t.type === 'daily' && isTaskActiveToday(t));
-    const dailyInactive = tasks.filter(t => t.type === 'daily' && !isTaskActiveToday(t));
-    const onetime       = tasks.filter(t => t.type === 'onetime');
-
-    if (dailyActive.length)   { this.listEl.appendChild(this._header(I18n.t('sectionDaily'), dailyActive.length)); dailyActive.forEach(t => this.listEl.appendChild(this._taskEl(t))); }
-    if (dailyInactive.length) { this.listEl.appendChild(this._header(I18n.t('sectionNotToday'), dailyInactive.length)); dailyInactive.forEach(t => this.listEl.appendChild(this._taskEl(t, true))); }
-    if (onetime.length)       { this.listEl.appendChild(this._header(I18n.t('sectionOnetime'), onetime.length)); onetime.forEach(t => this.listEl.appendChild(this._taskEl(t))); }
 
     await Progress.update();
   },
@@ -746,10 +746,10 @@ const UITasks = {
     return bar;
   },
 
-  _header(label, count) {
+  _header(label) {
     const el = document.createElement('div');
     el.className = 'section-header';
-    el.innerHTML = `<span class="section-title">${label}</span><span class="section-count">${count}</span>`;
+    el.innerHTML = `<span class="section-title">${label}</span>`;
     return el;
   },
 
@@ -779,16 +779,12 @@ const UITasks = {
       deadlineChipHtml = `<span class="deadline-chip" style="color:${color}">${escapeHtml(label)}</span>`;
     }
 
-    // Subtask progress badge
-    const subs     = task.subtasks || [];
-    const subDone  = subs.filter(s => s.completed).length;
-    const subBadge = subs.length
-      ? `<span class="subtask-badge">${subDone}/${subs.length}</span>`
-      : '';
-
-    // Expand button (only if has subtasks or always show to allow adding)
+    // Subtask expand zone
+    const subs      = task.subtasks || [];
+    const subDone   = subs.filter(s => s.completed).length;
     const isExpanded = this.expanded.has(task.id);
-    const expandIcon = isExpanded ? '▲' : '▼';
+    const countHtml  = subs.length ? `<span class="expand-count">${subDone}/${subs.length}</span>` : '';
+    const chevronCls = isExpanded ? 'expand-chevron open' : 'expand-chevron';
 
     el.innerHTML = `
       <div class="task-content">
@@ -798,13 +794,9 @@ const UITasks = {
           ${daysHtml}
           ${deadlineChipHtml}
         </div>
-        <div class="task-meta">
-          ${subBadge}
-          <button class="task-expand-btn" data-action="expand" title="subtasks">${expandIcon}</button>
-        </div>
-        <div class="task-hover-btns">
-          <button class="task-hover-btn" data-action="edit" title="${I18n.t('ctxEdit')}">✏️</button>
-          <button class="task-hover-btn is-delete" data-action="delete" title="${I18n.t('ctxDelete')}">✕</button>
+        <div class="task-expand-zone" data-action="expand">
+          ${countHtml}
+          <span class="${chevronCls}">›</span>
         </div>
       </div>
       ${deadlineBarHtml}
@@ -827,8 +819,7 @@ const UITasks = {
     el.querySelectorAll('[data-action="edit"]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); this._openEdit(task); }));
     el.querySelectorAll('[data-action="delete"]').forEach(b => b.addEventListener('click', async e => { e.stopPropagation(); haptic('medium'); await Store.deleteTask(task.id); this.render(); }));
 
-    // Expand/collapse subtasks
-    el.querySelector('[data-action="expand"]').addEventListener('click', e => {
+    el.querySelector('.task-expand-zone').addEventListener('click', e => {
       e.stopPropagation();
       haptic('light');
       if (this.expanded.has(task.id)) this.expanded.delete(task.id);
