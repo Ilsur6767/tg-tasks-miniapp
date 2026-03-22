@@ -55,6 +55,13 @@ const I18n = {
       deadlineSoon:         'Скоро дедлайн',
       subtaskPlaceholder:   'Новая подзадача...',
       addSubtaskBtn:        '+ подзадача',
+      tabSettings:          'Настройки',
+      settingsBot:          'Уведомления',
+      settingsBotDesc:      'Введи токен бота чтобы получать сообщение в Telegram за 3 часа до дедлайна',
+      settingsBotToken:     'Bot Token',
+      settingsSave:         'Сохранить',
+      settingsTokenSaved:   'Токен сохранён ✓',
+      settingsTokenCleared: 'Токен удалён',
       days: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
     },
     en: {
@@ -98,6 +105,13 @@ const I18n = {
       deadlineSoon:         'Deadline soon',
       subtaskPlaceholder:   'New subtask...',
       addSubtaskBtn:        '+ subtask',
+      tabSettings:          'Settings',
+      settingsBot:          'Notifications',
+      settingsBotDesc:      'Enter bot token to receive a Telegram message 3 hours before deadline',
+      settingsBotToken:     'Bot Token',
+      settingsSave:         'Save',
+      settingsTokenSaved:   'Token saved ✓',
+      settingsTokenCleared: 'Token cleared',
       days: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
     },
   },
@@ -130,7 +144,7 @@ const I18n = {
 
 const Config = {
   PREFIXES: { TASKS: 'tma_tasks', ACH: 'tma_ach', THOUGHTS: 'tma_thoughts' },
-  KEYS:     { RESET: 'tma_reset', LANG: 'tma_lang' },
+  KEYS:     { RESET: 'tma_reset', LANG: 'tma_lang', BOT_TOKEN: 'tma_bot_token' },
   CHUNK_SIZE: 800,
   DEADLINE_WARN_MS: 3 * 60 * 60 * 1000, // 3 hours
 };
@@ -304,6 +318,8 @@ const Store = {
   async setLastReset(d){ return CloudStore.set(Config.KEYS.RESET, d); },
   async getLang()      { return CloudStore.get(Config.KEYS.LANG); },
   async setLang(l)     { return CloudStore.set(Config.KEYS.LANG, l); },
+  async getBotToken()  { return CloudStore.get(Config.KEYS.BOT_TOKEN); },
+  async setBotToken(t) { return CloudStore.set(Config.KEYS.BOT_TOKEN, t); },
 
   async addTask(title, type, days = [], deadline = null) {
     const tasks = await this.getTasks();
@@ -380,6 +396,20 @@ const Store = {
   async clearThoughts() { await this.saveThoughts([]); },
   async clearTasks()    { await this.saveTasks([]); await this.saveAchievements([]); },
 };
+
+// ============================================================
+// Bot API
+// ============================================================
+
+async function sendBotMessage(token, chatId, text) {
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
+    });
+  } catch(e) { /* silent fail */ }
+}
 
 // ============================================================
 // DailyReset
@@ -696,6 +726,19 @@ const DeadlineChecker = {
       }
       Toast.show(msg, diff < 0 ? 'error' : 'warning', 7000);
     });
+
+    // Send real Telegram message if bot token is configured
+    const token  = await Store.getBotToken();
+    const chatId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+    if (token && chatId && urgent.length) {
+      for (const task of urgent) {
+        const diff = task.deadline - Date.now();
+        const text = diff < 0
+          ? `🔴 Просрочено: <b>${task.title}</b>`
+          : `⏰ Дедлайн скоро: <b>${task.title}</b>`;
+        await sendBotMessage(token, chatId, text);
+      }
+    }
   },
 };
 
@@ -1103,7 +1146,30 @@ const LangSwitcher = {
       if (tab === 'tasks')        await UITasks.render();
       if (tab === 'achievements') await UIAchievements.render();
       if (tab === 'thoughts')     await UIThoughts.render();
+      if (tab === 'settings')     await UISettings.show();
     });
+  },
+};
+
+// ============================================================
+// UI.Settings
+// ============================================================
+
+const UISettings = {
+  init() {
+    document.getElementById('saveTokenBtn').addEventListener('click', async () => {
+      haptic('light');
+      const val    = document.getElementById('botTokenInput').value.trim();
+      const status = document.getElementById('tokenStatus');
+      await Store.setBotToken(val);
+      status.textContent = val ? I18n.t('settingsTokenSaved') : I18n.t('settingsTokenCleared');
+      setTimeout(() => { status.textContent = ''; }, 2500);
+    });
+  },
+
+  async show() {
+    const token = await Store.getBotToken();
+    document.getElementById('botTokenInput').value = token || '';
   },
 };
 
@@ -1117,6 +1183,7 @@ const UITabs = {
     tasks:        document.getElementById('tab-tasks'),
     achievements: document.getElementById('tab-achievements'),
     thoughts:     document.getElementById('tab-thoughts'),
+    settings:     document.getElementById('tab-settings'),
   },
 
   init() {
@@ -1137,12 +1204,13 @@ const UITabs = {
     header.style.display = tab === 'tasks' ? '' : 'none';
     main.style.top       = tab === 'tasks' ? 'var(--header-height)' : '0';
 
-    document.getElementById('fabBtn').style.display = (tab === 'achievements' || tab === 'thoughts') ? 'none' : '';
+    document.getElementById('fabBtn').style.display = (['achievements','thoughts','settings'].includes(tab)) ? 'none' : '';
     tab === 'thoughts' ? UIThoughts.show() : UIThoughts.hide();
 
     if (tab === 'tasks')        await UITasks.render();
     if (tab === 'achievements') await UIAchievements.render();
     if (tab === 'thoughts')     await UIThoughts.render();
+    if (tab === 'settings')     await UISettings.show();
   },
 };
 
@@ -1203,6 +1271,7 @@ const App = {
     UIThoughts.init();
     FAB.init();
     LangSwitcher.init();
+    UISettings.init();
 
     await UITasks.render();
 

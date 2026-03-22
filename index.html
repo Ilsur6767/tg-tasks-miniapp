@@ -66,6 +66,22 @@
       </div>
     </section>
 
+    <!-- Settings -->
+    <section class="tab-panel" id="tab-settings">
+      <div class="settings-container">
+        <div class="settings-section">
+          <h3 class="settings-section-title" data-i18n="settingsBot">Уведомления</h3>
+          <p class="settings-hint" data-i18n="settingsBotDesc">Введи токен бота чтобы получать сообщение в Telegram за 3 часа до дедлайна</p>
+          <div class="settings-field">
+            <label class="settings-label" data-i18n="settingsBotToken">Bot Token</label>
+            <input type="text" class="settings-input" id="botTokenInput" placeholder="123456:ABC-DEF..." autocomplete="off">
+          </div>
+          <button class="settings-btn settings-btn-primary" id="saveTokenBtn" data-i18n="settingsSave">Сохранить</button>
+          <p class="settings-status" id="tokenStatus"></p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Нижняя навигация -->
@@ -81,6 +97,10 @@
     <button class="tab-btn" data-tab="thoughts">
       <span class="tab-icon">💭</span>
       <span class="tab-label" data-i18n="tabThoughts">Мысли</span>
+    </button>
+    <button class="tab-btn" data-tab="settings">
+      <span class="tab-icon">⚙️</span>
+      <span class="tab-label" data-i18n="tabSettings">Настройки</span>
     </button>
   </nav>
 
