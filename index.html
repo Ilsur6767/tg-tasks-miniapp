@@ -36,16 +36,6 @@
       </div>
     </section>
 
-    <!-- Mini Tasks -->
-    <section class="tab-panel" id="tab-mini">
-      <div class="list-container" id="miniTaskList"></div>
-      <div class="empty-state" id="emptyMini" style="display:none">
-        <div class="empty-icon">⚡</div>
-        <p class="empty-text" data-i18n="emptyMini">Нет мини-задач</p>
-        <p class="empty-hint" data-i18n="emptyMiniHint">Быстрые дела на сегодня</p>
-      </div>
-    </section>
-
     <!-- Achievements -->
     <section class="tab-panel" id="tab-achievements">
       <div class="achievements-container" id="achievementList"></div>
@@ -83,10 +73,6 @@
     <button class="tab-btn active" data-tab="tasks">
       <span class="tab-icon">✓</span>
       <span class="tab-label" data-i18n="tabTasks">Задачи</span>
-    </button>
-    <button class="tab-btn" data-tab="mini">
-      <span class="tab-icon">⚡</span>
-      <span class="tab-label" data-i18n="tabMini">Мини</span>
     </button>
     <button class="tab-btn" data-tab="achievements">
       <span class="tab-icon">🏆</span>
@@ -127,9 +113,11 @@
         </div>
         <div class="days-picker" id="daysPicker">
           <span class="days-picker-label" data-i18n="activeDays">Активна в дни:</span>
-          <div class="days-row" id="daysRow">
-            <!-- Дни вставляются из JS для поддержки i18n -->
-          </div>
+          <div class="days-row" id="daysRow"></div>
+        </div>
+        <div class="deadline-row" id="deadlineRow">
+          <span class="deadline-row-label" data-i18n="deadline">Дедлайн</span>
+          <input type="datetime-local" class="deadline-input" id="deadlineInput">
         </div>
       </div>
       <div class="modal-footer">
@@ -148,6 +136,9 @@
       <span>🗑️</span> <span data-i18n="ctxDelete">Удалить</span>
     </button>
   </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
 
   <script src="app.js"></script>
 </body>

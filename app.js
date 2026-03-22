@@ -15,93 +15,89 @@ const I18n = {
 
   strings: {
     ru: {
-      progressLabel:     'Прогресс дня',
-      tabTasks:          'Задачи',
-      tabMini:           'Мини',
-      tabAch:            'Победы',
-      tabThoughts:       'Мысли',
-      emptyTasks:        'Задач пока нет',
-      emptyTasksHint:    'Нажми + чтобы добавить',
-      emptyMini:         'Нет мини-задач',
-      emptyMiniHint:     'Быстрые дела на сегодня',
-      emptyAch:          'Пока нет достижений',
-      emptyAchHint:      'Выполни задачи — они появятся здесь',
-      emptyThoughts:     'Нет записей',
-      emptyThoughtsHint: 'Напиши свою первую мысль',
-      thoughtPlaceholder:'Напиши мысль...',
-      newTask:           'Новая задача',
-      newMini:           'Новая мини-задача',
-      editTask:          'Редактировать задачу',
-      editMini:          'Редактировать мини-задачу',
-      typeDaily:         'Ежедневная',
-      typeOnetime:       'Разовая',
-      activeDays:        'Активна в дни:',
-      cancel:            'Отмена',
-      save:              'Сохранить',
-      ctxEdit:           'Редактировать',
-      ctxDelete:         'Удалить',
-      labelDaily:        'Ежедневная',
-      labelOnetime:      'Разовая',
-      labelMini:         'Мини',
-      sectionDaily:      'Ежедневные',
-      sectionOnetime:    'Разовые',
-      sectionNotToday:   'Не сегодня',
-      sectionDone:       'Выполнено',
-      statToday:         'Сегодня',
-      statTotal:         'Всего',
-      confirmReplace:    'Заменить все текущие данные?',
-      confirmDeleteAll:  'Удалить ВСЕ данные? Это нельзя отменить.',
-      confirmDeleteAll2: 'Последний шанс. Точно удалить?',
+      progressLabel:        'Прогресс дня',
+      tabTasks:             'Задачи',
+      tabAch:               'Победы',
+      tabThoughts:          'Мысли',
+      emptyTasks:           'Задач пока нет',
+      emptyTasksHint:       'Нажми + чтобы добавить',
+      emptyAch:             'Пока нет достижений',
+      emptyAchHint:         'Выполни задачи — они появятся здесь',
+      emptyThoughts:        'Нет записей',
+      emptyThoughtsHint:    'Напиши свою первую мысль',
+      thoughtPlaceholder:   'Напиши мысль...',
+      newTask:              'Новая задача',
+      editTask:             'Редактировать задачу',
+      typeDaily:            'Ежедневная',
+      typeOnetime:          'Разовая',
+      activeDays:           'Активна в дни:',
+      deadline:             'Дедлайн',
+      cancel:               'Отмена',
+      save:                 'Сохранить',
+      ctxEdit:              'Редактировать',
+      ctxDelete:            'Удалить',
+      labelDaily:           'Ежедневная',
+      labelOnetime:         'Разовая',
+      sectionDaily:         'Ежедневные',
+      sectionOnetime:       'Разовые',
+      sectionNotToday:      'Не сегодня',
+      sectionDone:          'Выполнено',
+      statToday:            'Сегодня',
+      statTotal:            'Всего',
+      confirmReplace:       'Заменить все текущие данные?',
+      confirmDeleteAll:     'Удалить ВСЕ данные? Это нельзя отменить.',
+      confirmDeleteAll2:    'Последний шанс. Точно удалить?',
       confirmDeleteThought: 'Удалить запись?',
       clearAll:             'Очистить всё',
       confirmClearThoughts: 'Удалить все мысли? Это нельзя отменить.',
       confirmClearTasks:    'Удалить все задачи? Это нельзя отменить.',
-      confirmClearMini:     'Удалить все мини-задачи? Это нельзя отменить.',
+      deadlineOverdue:      'Просрочено',
+      deadlineSoon:         'Скоро дедлайн',
+      subtaskPlaceholder:   'Новая подзадача...',
+      addSubtaskBtn:        '+ подзадача',
       days: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
     },
     en: {
-      progressLabel:     'Daily progress',
-      tabTasks:          'Tasks',
-      tabMini:           'Quick',
-      tabAch:            'Wins',
-      tabThoughts:       'Thoughts',
-      emptyTasks:        'No tasks yet',
-      emptyTasksHint:    'Tap + to add one',
-      emptyMini:         'No quick tasks',
-      emptyMiniHint:     'Small things to do today',
-      emptyAch:          'No achievements yet',
-      emptyAchHint:      'Complete tasks — they will appear here',
-      emptyThoughts:     'No entries yet',
-      emptyThoughtsHint: 'Write your first thought',
-      thoughtPlaceholder:'Write a thought...',
-      newTask:           'New task',
-      newMini:           'New quick task',
-      editTask:          'Edit task',
-      editMini:          'Edit quick task',
-      typeDaily:         'Daily',
-      typeOnetime:       'One-time',
-      activeDays:        'Active on days:',
-      cancel:            'Cancel',
-      save:              'Save',
-      ctxEdit:           'Edit',
-      ctxDelete:         'Delete',
-      labelDaily:        'Daily',
-      labelOnetime:      'One-time',
-      labelMini:         'Quick',
-      sectionDaily:      'Daily',
-      sectionOnetime:    'One-time',
-      sectionNotToday:   'Not today',
-      sectionDone:       'Done',
-      statToday:         'Today',
-      statTotal:         'Total',
-      confirmReplace:    'Replace all current data?',
-      confirmDeleteAll:  'Delete ALL data? This cannot be undone.',
-      confirmDeleteAll2: 'Last chance. Are you sure?',
+      progressLabel:        'Daily progress',
+      tabTasks:             'Tasks',
+      tabAch:               'Wins',
+      tabThoughts:          'Thoughts',
+      emptyTasks:           'No tasks yet',
+      emptyTasksHint:       'Tap + to add one',
+      emptyAch:             'No achievements yet',
+      emptyAchHint:         'Complete tasks — they will appear here',
+      emptyThoughts:        'No entries yet',
+      emptyThoughtsHint:    'Write your first thought',
+      thoughtPlaceholder:   'Write a thought...',
+      newTask:              'New task',
+      editTask:             'Edit task',
+      typeDaily:            'Daily',
+      typeOnetime:          'One-time',
+      activeDays:           'Active on days:',
+      deadline:             'Deadline',
+      cancel:               'Cancel',
+      save:                 'Save',
+      ctxEdit:              'Edit',
+      ctxDelete:            'Delete',
+      labelDaily:           'Daily',
+      labelOnetime:         'One-time',
+      sectionDaily:         'Daily',
+      sectionOnetime:       'One-time',
+      sectionNotToday:      'Not today',
+      sectionDone:          'Done',
+      statToday:            'Today',
+      statTotal:            'Total',
+      confirmReplace:       'Replace all current data?',
+      confirmDeleteAll:     'Delete ALL data? This cannot be undone.',
+      confirmDeleteAll2:    'Last chance. Are you sure?',
       confirmDeleteThought: 'Delete this entry?',
       clearAll:             'Clear all',
       confirmClearThoughts: 'Delete all thoughts? This cannot be undone.',
       confirmClearTasks:    'Delete all tasks? This cannot be undone.',
-      confirmClearMini:     'Delete all quick tasks? This cannot be undone.',
+      deadlineOverdue:      'Overdue',
+      deadlineSoon:         'Deadline soon',
+      subtaskPlaceholder:   'New subtask...',
+      addSubtaskBtn:        '+ subtask',
       days: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
     },
   },
@@ -117,16 +113,12 @@ const I18n = {
   },
 
   _applyAll() {
-    // Тексты элементов
     document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.dataset.i18n;
-      el.textContent = this.t(key);
+      el.textContent = this.t(el.dataset.i18n);
     });
-    // Placeholder'ы
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
       el.placeholder = this.t(el.dataset.i18nPlaceholder);
     });
-    // Кнопка языка
     const btn = document.getElementById('langBtn');
     if (btn) btn.textContent = this.current === 'ru' ? 'EN' : 'RU';
   },
@@ -137,9 +129,10 @@ const I18n = {
 // ============================================================
 
 const Config = {
-  PREFIXES: { TASKS: 'tma_tasks', MINI: 'tma_mini', ACH: 'tma_ach', THOUGHTS: 'tma_thoughts' },
+  PREFIXES: { TASKS: 'tma_tasks', ACH: 'tma_ach', THOUGHTS: 'tma_thoughts' },
   KEYS:     { RESET: 'tma_reset', LANG: 'tma_lang' },
   CHUNK_SIZE: 800,
+  DEADLINE_WARN_MS: 3 * 60 * 60 * 1000, // 3 hours
 };
 
 // ============================================================
@@ -172,7 +165,7 @@ function formatTime(ts) {
 
 function formatDateLabel(dateStr) {
   const today = todayString();
-  const yd    = new Date(); yd.setDate(yd.getDate() - 1);
+  const yd = new Date(); yd.setDate(yd.getDate() - 1);
   const yesterday = `${yd.getFullYear()}-${String(yd.getMonth()+1).padStart(2,'0')}-${String(yd.getDate()).padStart(2,'0')}`;
   if (dateStr === today)     return I18n.t('statToday');
   if (dateStr === yesterday) return I18n.current === 'ru' ? 'Вчера' : 'Yesterday';
@@ -181,6 +174,29 @@ function formatDateLabel(dateStr) {
     ? ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек']
     : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function formatDeadline(ts) {
+  const now = Date.now();
+  const diff = ts - now;
+  const d = new Date(ts);
+  const months = I18n.current === 'ru'
+    ? ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек']
+    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dateStr = `${d.getDate()} ${months[d.getMonth()]}, ${formatTime(ts)}`;
+
+  if (diff < 0) {
+    return { text: `🔴 ${I18n.t('deadlineOverdue')} · ${dateStr}`, cls: 'deadline-overdue' };
+  }
+  if (diff < Config.DEADLINE_WARN_MS) {
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const timeLeft = h > 0
+      ? (I18n.current === 'ru' ? `${h}ч ${m}м` : `${h}h ${m}m`)
+      : (I18n.current === 'ru' ? `${m}м` : `${m}m`);
+    return { text: `⏰ ${timeLeft}`, cls: 'deadline-soon' };
+  }
+  return { text: `📅 ${dateStr}`, cls: 'deadline-normal' };
 }
 
 function haptic(type = 'light') {
@@ -253,7 +269,7 @@ const ChunkedStorage = {
     for (let i = 0; i < json.length; i += Config.CHUNK_SIZE) chunks.push(json.slice(i, i + Config.CHUNK_SIZE));
     if (!chunks.length) chunks.push('[]');
 
-    const prevN   = parseInt(await CloudStore.get(`${prefix}_n`) || '0');
+    const prevN    = parseInt(await CloudStore.get(`${prefix}_n`) || '0');
     const toRemove = [];
     for (let i = chunks.length; i < prevN; i++) toRemove.push(`${prefix}_${i}`);
     if (toRemove.length) await CloudStore.removeMultiple(toRemove);
@@ -279,21 +295,19 @@ const ChunkedStorage = {
 const Store = {
   async getTasks()            { return ChunkedStorage.load(Config.PREFIXES.TASKS); },
   async saveTasks(arr)        { return ChunkedStorage.save(Config.PREFIXES.TASKS, arr); },
-  async getMiniTasks()        { return ChunkedStorage.load(Config.PREFIXES.MINI); },
-  async saveMiniTasks(arr)    { return ChunkedStorage.save(Config.PREFIXES.MINI, arr); },
   async getAchievements()     { return ChunkedStorage.load(Config.PREFIXES.ACH); },
   async saveAchievements(arr) { return ChunkedStorage.save(Config.PREFIXES.ACH, arr); },
   async getThoughts()         { return ChunkedStorage.load(Config.PREFIXES.THOUGHTS); },
   async saveThoughts(arr)     { return ChunkedStorage.save(Config.PREFIXES.THOUGHTS, arr); },
 
-  async getLastReset()        { return CloudStore.get(Config.KEYS.RESET); },
-  async setLastReset(d)       { return CloudStore.set(Config.KEYS.RESET, d); },
-  async getLang()             { return CloudStore.get(Config.KEYS.LANG); },
-  async setLang(l)            { return CloudStore.set(Config.KEYS.LANG, l); },
+  async getLastReset() { return CloudStore.get(Config.KEYS.RESET); },
+  async setLastReset(d){ return CloudStore.set(Config.KEYS.RESET, d); },
+  async getLang()      { return CloudStore.get(Config.KEYS.LANG); },
+  async setLang(l)     { return CloudStore.set(Config.KEYS.LANG, l); },
 
-  async addTask(title, type, days = []) {
+  async addTask(title, type, days = [], deadline = null) {
     const tasks = await this.getTasks();
-    const task  = { id: genId(), title, type, completed: false, createdAt: Date.now(), days };
+    const task  = { id: genId(), title, type, completed: false, createdAt: Date.now(), days, deadline, subtasks: [] };
     tasks.unshift(task);
     await this.saveTasks(tasks);
     return task;
@@ -324,30 +338,31 @@ const Store = {
     if (idx >= 0) { ach.splice(ach.length - 1 - idx, 1); await this.saveAchievements(ach); }
   },
 
-  async addMiniTask(title) {
-    const tasks = await this.getMiniTasks();
-    const task  = { id: genId(), title, completed: false, createdAt: Date.now() };
-    tasks.unshift(task);
-    await this.saveMiniTasks(tasks);
-    return task;
-  },
-
-  async updateMiniTask(id, changes) {
-    await this.saveMiniTasks((await this.getMiniTasks()).map(t => t.id === id ? { ...t, ...changes } : t));
-  },
-
-  async deleteMiniTask(id) {
-    await this.saveMiniTasks((await this.getMiniTasks()).filter(t => t.id !== id));
-  },
-
-  async completeMiniTask(id) {
-    const task = (await this.getMiniTasks()).find(t => t.id === id);
+  // Subtask methods
+  async addSubtask(taskId, title) {
+    const tasks = await this.getTasks();
+    const task  = tasks.find(t => t.id === taskId);
     if (!task) return;
-    const ach = await this.getAchievements();
-    ach.unshift({ id: genId(), taskId: id, title: task.title, type: 'mini',
-                  completedAt: Date.now(), completedDate: todayString() });
-    await this.saveAchievements(ach);
-    await this.updateMiniTask(id, { completed: true });
+    if (!task.subtasks) task.subtasks = [];
+    task.subtasks.push({ id: genId(), title, completed: false, createdAt: Date.now() });
+    await this.saveTasks(tasks);
+  },
+
+  async toggleSubtask(taskId, subtaskId) {
+    const tasks = await this.getTasks();
+    const task  = tasks.find(t => t.id === taskId);
+    if (!task || !task.subtasks) return;
+    const sub = task.subtasks.find(s => s.id === subtaskId);
+    if (sub) sub.completed = !sub.completed;
+    await this.saveTasks(tasks);
+  },
+
+  async deleteSubtask(taskId, subtaskId) {
+    const tasks = await this.getTasks();
+    const task  = tasks.find(t => t.id === taskId);
+    if (!task || !task.subtasks) return;
+    task.subtasks = task.subtasks.filter(s => s.id !== subtaskId);
+    await this.saveTasks(tasks);
   },
 
   async addThought(text) {
@@ -362,9 +377,8 @@ const Store = {
     await this.saveThoughts((await this.getThoughts()).filter(t => t.id !== id));
   },
 
-  async clearThoughts()  { await this.saveThoughts([]); },
-  async clearTasks()     { await this.saveTasks([]); await this.saveAchievements([]); },
-  async clearMiniTasks() { await this.saveMiniTasks([]); },
+  async clearThoughts() { await this.saveThoughts([]); },
+  async clearTasks()    { await this.saveTasks([]); await this.saveAchievements([]); },
 };
 
 // ============================================================
@@ -387,10 +401,10 @@ const DailyReset = {
 
 class SwipeHandler {
   constructor(containerEl, itemSel, contentSel, actionsSel) {
-    this.container   = containerEl;
-    this.itemSel     = itemSel;
-    this.contentSel  = contentSel;
-    this.actionsSel  = actionsSel;
+    this.container  = containerEl;
+    this.itemSel    = itemSel;
+    this.contentSel = contentSel;
+    this.actionsSel = actionsSel;
     this.startX = 0; this.startY = 0;
     this.currentItem = null; this.active = false; this.dirLocked = null;
     this.THRESHOLD = 80; this.ACTION_WIDTH = 128;
@@ -431,14 +445,14 @@ class SwipeHandler {
 
   _end(e) {
     if (!this.active || !this.currentItem) return;
-    const dx = e.changedTouches[0].clientX - this.startX;
+    const dx     = e.changedTouches[0].clientX - this.startX;
     const swiped = this.currentItem.classList.contains('swiped');
     const c = this.currentItem.querySelector(this.contentSel);
     const a = this.currentItem.querySelector(this.actionsSel);
     if (c) c.style.transition = '';
     if (a) a.style.transition = '';
-    if (!swiped && dx < -this.THRESHOLD)         this._open(this.currentItem);
-    else if (swiped && dx > this.THRESHOLD / 2)  this._close(this.currentItem);
+    if (!swiped && dx < -this.THRESHOLD)        this._open(this.currentItem);
+    else if (swiped && dx > this.THRESHOLD / 2) this._close(this.currentItem);
     else swiped ? this._open(this.currentItem) : this._close(this.currentItem);
     this.active = false; this.currentItem = null; this.dirLocked = null;
   }
@@ -520,14 +534,15 @@ const ContextMenu = {
 // ============================================================
 
 const Modal = {
-  overlay:    document.getElementById('modalOverlay'),
-  titleEl:    document.getElementById('modalTitle'),
-  inputEl:    document.getElementById('modalInput'),
-  typeToggle: document.getElementById('typeToggle'),
-  daysPicker: document.getElementById('daysPicker'),
-  daysRow:    document.getElementById('daysRow'),
-  saveBtn:    document.getElementById('modalSave'),
-  cancelBtn:  document.getElementById('modalCancel'),
+  overlay:       document.getElementById('modalOverlay'),
+  titleEl:       document.getElementById('modalTitle'),
+  inputEl:       document.getElementById('modalInput'),
+  typeToggle:    document.getElementById('typeToggle'),
+  daysPicker:    document.getElementById('daysPicker'),
+  daysRow:       document.getElementById('daysRow'),
+  deadlineInput: document.getElementById('deadlineInput'),
+  saveBtn:       document.getElementById('modalSave'),
+  cancelBtn:     document.getElementById('modalCancel'),
   _onSave: null, _isOpen: false,
   _selectedType: 'daily', _selectedDays: [],
 
@@ -549,7 +564,10 @@ const Modal = {
       const val = this.inputEl.value.trim();
       if (!val) { this.inputEl.focus(); return; }
       this._syncDays();
-      if (this._onSave) this._onSave(val, this._selectedType, this._selectedDays);
+      const deadline = this.deadlineInput.value
+        ? new Date(this.deadlineInput.value).getTime()
+        : null;
+      if (this._onSave) this._onSave(val, this._selectedType, this._selectedDays, deadline);
       this.close();
     });
 
@@ -584,17 +602,27 @@ const Modal = {
     this._selectedDays = days;
   },
 
-  open({ title = '', value = '', type = 'daily', days = [], showTypeToggle = true, onSave }) {
-    this.titleEl.textContent = title || I18n.t('newTask');
-    this.inputEl.value       = value;
-    this.inputEl.placeholder = I18n.t('newTask');
-    this._selectedType       = type;
-    this._onSave             = onSave;
-    this._isOpen             = true;
-    this.typeToggle.style.display = showTypeToggle ? 'flex' : 'none';
+  open({ title = '', value = '', type = 'daily', days = [], deadline = null, showTypeToggle = true, onSave }) {
+    this.titleEl.textContent  = title || I18n.t('newTask');
+    this.inputEl.value        = value;
+    this.inputEl.placeholder  = I18n.t('newTask');
+    this._selectedType        = type;
+    this._onSave              = onSave;
+    this._isOpen              = true;
+    this.typeToggle.style.display  = showTypeToggle ? 'flex' : 'none';
     this.typeToggle.querySelectorAll('.type-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.type === type));
-    this.daysPicker.style.display = showTypeToggle && type === 'daily' ? 'flex' : 'none';
+    this.daysPicker.style.display  = showTypeToggle && type === 'daily' ? 'flex' : 'none';
     this._setDaysUI(days);
+
+    // Set deadline input
+    if (deadline) {
+      const d = new Date(deadline);
+      const pad = n => String(n).padStart(2, '0');
+      this.deadlineInput.value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    } else {
+      this.deadlineInput.value = '';
+    }
+
     this.overlay.classList.add('visible');
     window.Telegram?.WebApp?.BackButton?.show?.();
     setTimeout(() => this.inputEl.focus(), 350);
@@ -605,6 +633,69 @@ const Modal = {
     this.overlay.classList.remove('visible');
     this.inputEl.blur();
     window.Telegram?.WebApp?.BackButton?.hide?.();
+  },
+};
+
+// ============================================================
+// Toast
+// ============================================================
+
+const Toast = {
+  container: document.getElementById('toastContainer'),
+
+  show(message, type = 'warning', duration = 5000) {
+    const el = document.createElement('div');
+    el.className = `toast toast-${type}`;
+    el.innerHTML = `
+      <span class="toast-text">${escapeHtml(message)}</span>
+      <button class="toast-close">✕</button>`;
+    el.querySelector('.toast-close').addEventListener('click', () => this._dismiss(el));
+    this.container.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('toast-visible'));
+    if (duration > 0) setTimeout(() => this._dismiss(el), duration);
+  },
+
+  _dismiss(el) {
+    el.classList.remove('toast-visible');
+    setTimeout(() => el.remove(), 300);
+  },
+};
+
+// ============================================================
+// DeadlineChecker
+// ============================================================
+
+const DeadlineChecker = {
+  async run() {
+    const tasks = await Store.getTasks();
+    const now   = Date.now();
+    const warn  = Config.DEADLINE_WARN_MS;
+
+    const urgent = tasks.filter(t =>
+      !t.completed &&
+      t.deadline &&
+      (t.deadline - now) < warn
+    );
+
+    urgent.forEach(task => {
+      const diff = task.deadline - now;
+      let msg;
+      if (diff < 0) {
+        msg = I18n.current === 'ru'
+          ? `🔴 Просрочено: «${task.title}»`
+          : `🔴 Overdue: "${task.title}"`;
+      } else {
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const timeLeft = h > 0
+          ? (I18n.current === 'ru' ? `${h}ч ${m}м` : `${h}h ${m}m`)
+          : (I18n.current === 'ru' ? `${m}м` : `${m}m`);
+        msg = I18n.current === 'ru'
+          ? `⏰ Дедлайн через ${timeLeft}: «${task.title}»`
+          : `⏰ Deadline in ${timeLeft}: "${task.title}"`;
+      }
+      Toast.show(msg, diff < 0 ? 'error' : 'warning', 7000);
+    });
   },
 };
 
@@ -635,8 +726,9 @@ const Progress = {
 // ============================================================
 
 const UITasks = {
-  listEl:  document.getElementById('taskList'),
-  emptyEl: document.getElementById('emptyTasks'),
+  listEl:   document.getElementById('taskList'),
+  emptyEl:  document.getElementById('emptyTasks'),
+  expanded: new Set(), // task IDs with expanded subtasks
 
   init() {
     new SwipeHandler(this.listEl, '.task-item', '.task-content', '.task-actions').attach();
@@ -695,26 +787,49 @@ const UITasks = {
     el.className = 'task-item' + (inactive ? ' inactive-today' : '');
     el.dataset.id = task.id;
 
-    const days = I18n.t('days');
+    const days     = I18n.t('days');
     const todayIdx = todayDayIndex();
-    let daysHtml = '';
+    let daysHtml   = '';
     if (task.type === 'daily' && task.days?.length && task.days.length < 7) {
       const dots = days.map((name, i) => {
-        const cls = task.days.includes(i) ? 'active-day' : 'inactive-day';
+        const cls     = task.days.includes(i) ? 'active-day' : 'inactive-day';
         const outline = i === todayIdx ? 'style="outline:2px solid currentColor;outline-offset:1px;"' : '';
         return `<span class="task-day-dot ${cls}" ${outline}>${name}</span>`;
       }).join('');
       daysHtml = `<div class="task-days">${dots}</div>`;
     }
 
+    // Deadline badge
+    let deadlineHtml = '';
+    if (task.deadline) {
+      const { text, cls } = formatDeadline(task.deadline);
+      deadlineHtml = `<div class="task-deadline ${cls}">${escapeHtml(text)}</div>`;
+    }
+
+    // Subtask progress badge
+    const subs     = task.subtasks || [];
+    const subDone  = subs.filter(s => s.completed).length;
+    const subBadge = subs.length
+      ? `<span class="subtask-badge">${subDone}/${subs.length}</span>`
+      : '';
+
+    // Expand button (only if has subtasks or always show to allow adding)
+    const isExpanded = this.expanded.has(task.id);
+    const expandIcon = isExpanded ? '▲' : '▼';
+
     el.innerHTML = `
       <div class="task-content">
         <div class="task-checkbox ${task.completed ? 'checked' : ''}"></div>
-        <div style="flex:1;min-width:0;">
+        <div class="task-body">
           <span class="task-text ${task.completed ? 'completed' : ''}">${escapeHtml(task.title)}</span>
           ${daysHtml}
+          ${deadlineHtml}
         </div>
-        <span class="task-badge ${task.type}">${I18n.t('label' + task.type.charAt(0).toUpperCase() + task.type.slice(1))}</span>
+        <div class="task-meta">
+          ${subBadge}
+          <span class="task-badge ${task.type}">${I18n.t('label' + task.type.charAt(0).toUpperCase() + task.type.slice(1))}</span>
+          <button class="task-expand-btn" data-action="expand" title="subtasks">${expandIcon}</button>
+        </div>
         <div class="task-hover-btns">
           <button class="task-hover-btn" data-action="edit" title="${I18n.t('ctxEdit')}">✏️</button>
           <button class="task-hover-btn is-delete" data-action="delete" title="${I18n.t('ctxDelete')}">✕</button>
@@ -723,7 +838,8 @@ const UITasks = {
       <div class="task-actions">
         <button class="task-action-btn task-action-edit" data-action="edit">✏️</button>
         <button class="task-action-btn task-action-delete" data-action="delete">🗑️</button>
-      </div>`;
+      </div>
+      <div class="subtasks-panel${isExpanded ? ' expanded' : ''}" id="sub-${task.id}"></div>`;
 
     if (!inactive) {
       el.querySelector('.task-checkbox').addEventListener('click', async () => {
@@ -734,97 +850,84 @@ const UITasks = {
       });
       el.querySelector('.task-text').addEventListener('click', () => el.querySelector('.task-checkbox').click());
     }
-    el.querySelectorAll('[data-action="edit"]').forEach(b => b.addEventListener('click', () => this._openEdit(task)));
-    el.querySelectorAll('[data-action="delete"]').forEach(b => b.addEventListener('click', async () => { haptic('medium'); await Store.deleteTask(task.id); this.render(); }));
-    return el;
-  },
 
-  _openEdit(task) {
-    Modal.open({
-      title: I18n.t('editTask'), value: task.title, type: task.type, days: task.days || [], showTypeToggle: true,
-      onSave: async (title, type, days) => { await Store.updateTask(task.id, { title, type, days }); this.render(); },
-    });
-  },
-};
+    el.querySelectorAll('[data-action="edit"]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); this._openEdit(task); }));
+    el.querySelectorAll('[data-action="delete"]').forEach(b => b.addEventListener('click', async e => { e.stopPropagation(); haptic('medium'); await Store.deleteTask(task.id); this.render(); }));
 
-// ============================================================
-// UI.MiniTasks
-// ============================================================
-
-const UIMiniTasks = {
-  listEl:  document.getElementById('miniTaskList'),
-  emptyEl: document.getElementById('emptyMini'),
-
-  init() {
-    new SwipeHandler(this.listEl, '.mini-item', '.mini-content', '.mini-actions').attach();
-    new LongPressHandler(this.listEl, '.mini-item', async (item, x, y) => {
-      const task = (await Store.getMiniTasks()).find(t => t.id === item.dataset.id);
-      if (!task) return;
-      ContextMenu.show(x, y, () => this._openEdit(task), async () => { await Store.deleteMiniTask(task.id); this.render(); });
-    });
-  },
-
-  async render() {
-    const tasks = await Store.getMiniTasks();
-    this.listEl.innerHTML = '';
-    if (!tasks.length) { this.emptyEl.style.display = 'flex'; return; }
-    this.emptyEl.style.display = 'none';
-
-    const clearBar = document.createElement('div');
-    clearBar.className = 'clear-all-bar';
-    const clearBtn = document.createElement('button');
-    clearBtn.className = 'clear-all-btn';
-    clearBtn.textContent = I18n.t('clearAll');
-    clearBtn.addEventListener('click', () => {
-      if (confirm(I18n.t('confirmClearMini'))) { haptic('medium'); Store.clearMiniTasks().then(() => this.render()); }
-    });
-    clearBar.appendChild(clearBtn);
-    this.listEl.appendChild(clearBar);
-
-    const pending   = tasks.filter(t => !t.completed);
-    const completed = tasks.filter(t => t.completed);
-    pending.forEach(t => this.listEl.appendChild(this._miniEl(t)));
-    if (completed.length && pending.length) {
-      const sep = document.createElement('div');
-      sep.className = 'section-header';
-      sep.innerHTML = `<span class="section-title">${I18n.t('sectionDone')}</span><span class="section-count">${completed.length}</span>`;
-      this.listEl.appendChild(sep);
-    }
-    completed.forEach(t => this.listEl.appendChild(this._miniEl(t)));
-  },
-
-  _miniEl(task) {
-    const el = document.createElement('div');
-    el.className = 'mini-item'; el.dataset.id = task.id;
-    el.innerHTML = `
-      <div class="mini-content">
-        <div class="mini-checkbox ${task.completed ? 'checked' : ''}"></div>
-        <span class="mini-text ${task.completed ? 'completed' : ''}">${escapeHtml(task.title)}</span>
-        <div class="mini-hover-btns">
-          <button class="task-hover-btn" data-action="edit" title="${I18n.t('ctxEdit')}">✏️</button>
-          <button class="task-hover-btn is-delete" data-action="delete" title="${I18n.t('ctxDelete')}">✕</button>
-        </div>
-      </div>
-      <div class="mini-actions">
-        <button class="task-action-btn task-action-edit" data-action="edit">✏️</button>
-        <button class="task-action-btn task-action-delete" data-action="delete">🗑️</button>
-      </div>`;
-    el.querySelector('.mini-checkbox').addEventListener('click', async () => {
+    // Expand/collapse subtasks
+    el.querySelector('[data-action="expand"]').addEventListener('click', e => {
+      e.stopPropagation();
       haptic('light');
-      if (task.completed) await Store.updateMiniTask(task.id, { completed: false });
-      else { await Store.completeMiniTask(task.id); hapticNotify('success'); }
-      this.render(); UIAchievements.render();
+      if (this.expanded.has(task.id)) this.expanded.delete(task.id);
+      else this.expanded.add(task.id);
+      this.render();
     });
-    el.querySelector('.mini-text').addEventListener('click', () => el.querySelector('.mini-checkbox').click());
-    el.querySelectorAll('[data-action="edit"]').forEach(b => b.addEventListener('click', () => this._openEdit(task)));
-    el.querySelectorAll('[data-action="delete"]').forEach(b => b.addEventListener('click', async () => { haptic('medium'); await Store.deleteMiniTask(task.id); this.render(); }));
+
+    // Render subtasks panel
+    this._renderSubtasks(el.querySelector(`#sub-${task.id}`), task);
+
     return el;
+  },
+
+  _renderSubtasks(panel, task) {
+    const subs = task.subtasks || [];
+    panel.innerHTML = '';
+
+    subs.forEach(sub => {
+      const row = document.createElement('div');
+      row.className = 'subtask-row';
+      row.innerHTML = `
+        <div class="subtask-checkbox ${sub.completed ? 'checked' : ''}"></div>
+        <span class="subtask-text ${sub.completed ? 'completed' : ''}">${escapeHtml(sub.title)}</span>
+        <button class="subtask-delete" title="${I18n.t('ctxDelete')}">✕</button>`;
+      row.querySelector('.subtask-checkbox').addEventListener('click', async () => {
+        haptic('light');
+        await Store.toggleSubtask(task.id, sub.id);
+        this.render();
+      });
+      row.querySelector('.subtask-text').addEventListener('click', () => row.querySelector('.subtask-checkbox').click());
+      row.querySelector('.subtask-delete').addEventListener('click', async e => {
+        e.stopPropagation();
+        haptic('medium');
+        await Store.deleteSubtask(task.id, sub.id);
+        this.render();
+      });
+      panel.appendChild(row);
+    });
+
+    // Add subtask input row
+    const addRow = document.createElement('div');
+    addRow.className = 'subtask-add-row';
+    addRow.innerHTML = `
+      <input class="subtask-input" type="text" placeholder="${I18n.t('subtaskPlaceholder')}" maxlength="80">
+      <button class="subtask-add-btn">↑</button>`;
+
+    const input   = addRow.querySelector('.subtask-input');
+    const addBtn  = addRow.querySelector('.subtask-add-btn');
+
+    const doAdd = async () => {
+      const val = input.value.trim();
+      if (!val) return;
+      haptic('light');
+      input.value = '';
+      this.expanded.add(task.id);
+      await Store.addSubtask(task.id, val);
+      this.render();
+    };
+
+    addBtn.addEventListener('click', doAdd);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') doAdd(); });
+    panel.appendChild(addRow);
   },
 
   _openEdit(task) {
     Modal.open({
-      title: I18n.t('editMini'), value: task.title, showTypeToggle: false,
-      onSave: async (title) => { await Store.updateMiniTask(task.id, { title }); this.render(); },
+      title: I18n.t('editTask'), value: task.title, type: task.type,
+      days: task.days || [], deadline: task.deadline || null, showTypeToggle: true,
+      onSave: async (title, type, days, deadline) => {
+        await Store.updateTask(task.id, { title, type, days, deadline });
+        this.render();
+      },
     });
   },
 };
@@ -864,7 +967,7 @@ const UIAchievements = {
         card.className = 'achievement-card';
         card.style.animationDelay = `${(gi * 3 + i) * 0.04}s`;
         card.innerHTML = `
-          <div class="achievement-icon">${Config.ICONS?.[a.type] || '⭐'}</div>
+          <div class="achievement-icon">⭐</div>
           <div class="achievement-info">
             <div class="achievement-title">${escapeHtml(a.title)}</div>
             <div class="achievement-meta">${I18n.t('label' + a.type.charAt(0).toUpperCase() + a.type.slice(1)) || a.type} · ${formatTime(a.completedAt)}</div>
@@ -889,21 +992,18 @@ const UIThoughts = {
   sendBtn:  document.getElementById('thoughtSendBtn'),
 
   init() {
-    // Авторесайз textarea
     this.textarea.addEventListener('input', () => {
       this.textarea.style.height = 'auto';
       this.textarea.style.height = Math.min(this.textarea.scrollHeight, 120) + 'px';
       this.sendBtn.disabled = !this.textarea.value.trim();
     });
 
-    // Отправка
     this.sendBtn.addEventListener('click', () => this._send());
     this.textarea.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this._send(); }
     });
 
-    // Долгое нажатие на карточку — удалить
-    new LongPressHandler(this.listEl, '.thought-card', async (item, x, y) => {
+    new LongPressHandler(this.listEl, '.thought-card', async (item) => {
       if (!confirm(I18n.t('confirmDeleteThought'))) return;
       haptic('medium');
       await Store.deleteThought(item.dataset.id);
@@ -941,12 +1041,10 @@ const UIThoughts = {
     clearBar.appendChild(clearBtn);
     this.listEl.appendChild(clearBar);
 
-    // Группировка по дате
     const groups = {};
     thoughts.forEach(t => { if (!groups[t.date]) groups[t.date] = []; groups[t.date].push(t); });
 
     Object.entries(groups).forEach(([date, items]) => {
-      // Разделитель даты
       const divider = document.createElement('div');
       divider.className = 'thought-date-divider';
       divider.innerHTML = `<span class="thought-date-divider-label">${formatDateLabel(date)}</span>`;
@@ -964,7 +1062,6 @@ const UIThoughts = {
           </div>
           <div class="thought-text">${escapeHtml(thought.text)}</div>`;
 
-        // Показать/скрыть кнопку удаления при тапе
         card.addEventListener('click', e => {
           if (e.target.classList.contains('thought-delete-btn')) return;
           card.classList.toggle('show-delete');
@@ -973,14 +1070,10 @@ const UIThoughts = {
         card.querySelector('.thought-delete-btn').addEventListener('click', async e => {
           e.stopPropagation();
           haptic('medium');
-          card.style.animation = 'none';
-          card.style.opacity = '0';
-          card.style.transform = 'scale(0.95)';
+          card.style.opacity    = '0';
+          card.style.transform  = 'scale(0.95)';
           card.style.transition = 'all 0.2s ease';
-          setTimeout(async () => {
-            await Store.deleteThought(thought.id);
-            this.render();
-          }, 200);
+          setTimeout(async () => { await Store.deleteThought(thought.id); this.render(); }, 200);
         });
 
         this.listEl.appendChild(card);
@@ -1005,12 +1098,9 @@ const LangSwitcher = {
       const next = I18n.current === 'ru' ? 'en' : 'ru';
       I18n.set(next);
       await Store.setLang(next);
-      // Перестроить дни в модале
       Modal.rebuildDaysRow();
-      // Перерисовать текущую вкладку
       const tab = UITabs.currentTab;
       if (tab === 'tasks')        await UITasks.render();
-      if (tab === 'mini')         await UIMiniTasks.render();
       if (tab === 'achievements') await UIAchievements.render();
       if (tab === 'thoughts')     await UIThoughts.render();
     });
@@ -1025,7 +1115,6 @@ const UITabs = {
   currentTab: 'tasks',
   panels: {
     tasks:        document.getElementById('tab-tasks'),
-    mini:         document.getElementById('tab-mini'),
     achievements: document.getElementById('tab-achievements'),
     thoughts:     document.getElementById('tab-thoughts'),
   },
@@ -1048,14 +1137,10 @@ const UITabs = {
     header.style.display = tab === 'tasks' ? '' : 'none';
     main.style.top       = tab === 'tasks' ? 'var(--header-height)' : '0';
 
-    // FAB скрыть на achievements и thoughts
     document.getElementById('fabBtn').style.display = (tab === 'achievements' || tab === 'thoughts') ? 'none' : '';
-
-    // Input bar для thoughts
     tab === 'thoughts' ? UIThoughts.show() : UIThoughts.hide();
 
     if (tab === 'tasks')        await UITasks.render();
-    if (tab === 'mini')         await UIMiniTasks.render();
     if (tab === 'achievements') await UIAchievements.render();
     if (tab === 'thoughts')     await UIThoughts.render();
   },
@@ -1071,18 +1156,13 @@ const FAB = {
   init() {
     this.btn.addEventListener('click', () => {
       haptic('light');
-      const tab = UITabs.currentTab;
-      if (tab === 'tasks') {
-        Modal.open({
-          title: I18n.t('newTask'), showTypeToggle: true,
-          onSave: async (title, type, days) => { await Store.addTask(title, type, days); UITasks.render(); },
-        });
-      } else if (tab === 'mini') {
-        Modal.open({
-          title: I18n.t('newMini'), showTypeToggle: false,
-          onSave: async (title) => { await Store.addMiniTask(title); UIMiniTasks.render(); },
-        });
-      }
+      Modal.open({
+        title: I18n.t('newTask'), showTypeToggle: true,
+        onSave: async (title, type, days, deadline) => {
+          await Store.addTask(title, type, days, deadline);
+          UITasks.render();
+        },
+      });
     });
   },
 };
@@ -1111,11 +1191,8 @@ const App = {
 
     TelegramInit.init();
 
-    // Загрузить сохранённый язык
     const savedLang = await Store.getLang();
-    if (savedLang === 'en' || savedLang === 'ru') {
-      I18n.current = savedLang;
-    }
+    if (savedLang === 'en' || savedLang === 'ru') I18n.current = savedLang;
     I18n.set(I18n.current);
 
     await DailyReset.run();
@@ -1123,7 +1200,6 @@ const App = {
     Modal.init();
     UITabs.init();
     UITasks.init();
-    UIMiniTasks.init();
     UIThoughts.init();
     FAB.init();
     LangSwitcher.init();
@@ -1132,6 +1208,9 @@ const App = {
 
     document.body.style.transition = 'opacity 0.25s ease';
     document.body.style.opacity    = '1';
+
+    // Check for upcoming deadlines after render
+    setTimeout(() => DeadlineChecker.run(), 600);
   },
 };
 

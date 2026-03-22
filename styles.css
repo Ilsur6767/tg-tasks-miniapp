@@ -343,47 +343,100 @@ button {
 }
 
 /* ============================================================
-   МИНИ-ЗАДАЧИ — такой же стиль, чуть компактнее
+   DEADLINE BADGE
    ============================================================ */
 
-.mini-item {
-  position: relative;
-  margin: 4px var(--app-spacing);
-  border-radius: var(--app-radius);
-  overflow: hidden;
-  background: var(--tg-theme-secondary-bg-color);
-  touch-action: pan-y;
-  user-select: none;
+.task-body {
+  flex: 1;
+  min-width: 0;
 }
 
-.mini-content {
+.task-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.task-deadline {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 3px;
+  border-radius: 6px;
+  padding: 2px 6px;
+  display: inline-block;
+}
+
+.deadline-overdue {
+  background: rgba(229, 57, 53, 0.12);
+  color: #e53935;
+}
+
+.deadline-soon {
+  background: rgba(255, 109, 0, 0.12);
+  color: #ff6d00;
+}
+
+.deadline-normal {
+  color: var(--tg-theme-hint-color);
+  padding: 0;
+}
+
+.subtask-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tg-theme-button-color);
+  background: rgba(36, 129, 204, 0.1);
+  border-radius: 10px;
+  padding: 2px 7px;
+}
+
+.task-expand-btn {
+  font-size: 10px;
+  color: var(--tg-theme-hint-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.task-expand-btn:hover {
+  color: var(--tg-theme-button-color);
+}
+
+/* ============================================================
+   SUBTASKS PANEL
+   ============================================================ */
+
+.subtasks-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid rgba(128,128,128,0.12);
+  padding: 6px var(--app-spacing) 10px;
+  background: var(--tg-theme-secondary-bg-color);
+}
+
+.subtasks-panel.expanded {
+  display: flex;
+}
+
+.subtask-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px var(--app-spacing);
-  background: var(--tg-theme-secondary-bg-color);
-  border-radius: var(--app-radius);
-  transition: transform var(--app-transition);
-  position: relative;
-  z-index: 1;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(128,128,128,0.08);
 }
 
-.mini-actions {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  transform: translateX(100%);
-  transition: transform var(--app-transition);
-  border-radius: 0 var(--app-radius) var(--app-radius) 0;
-  overflow: hidden;
+.subtask-row:last-of-type {
+  border-bottom: none;
 }
 
-.mini-item.swiped .mini-content { transform: translateX(-128px); }
-.mini-item.swiped .mini-actions { transform: translateX(0); }
-
-.mini-checkbox {
+.subtask-checkbox {
   width: 18px;
   height: 18px;
   border-radius: 4px;
@@ -396,29 +449,94 @@ button {
   cursor: pointer;
 }
 
-.mini-checkbox.checked {
+.subtask-checkbox.checked {
   background: #34a853;
   border-color: #34a853;
 }
 
-.mini-checkbox.checked::after {
+.subtask-checkbox.checked::after {
   content: '✓';
   color: white;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
 }
 
-.mini-text {
+.subtask-text {
   flex: 1;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--tg-theme-text-color);
   word-break: break-word;
+  cursor: pointer;
 }
 
-.mini-text.completed {
-  opacity: 0.4;
+.subtask-text.completed {
+  opacity: 0.45;
   text-decoration: line-through;
 }
+
+.subtask-delete {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(229, 57, 53, 0.08);
+  color: #e53935;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.subtask-row:hover .subtask-delete,
+.subtask-delete:active {
+  opacity: 1;
+}
+
+.subtask-add-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.subtask-input {
+  flex: 1;
+  background: rgba(128,128,128,0.1);
+  border: none;
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--tg-theme-text-color);
+  outline: none;
+}
+
+.subtask-input::placeholder {
+  color: var(--tg-theme-hint-color);
+}
+
+.subtask-add-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--tg-theme-button-color);
+  color: var(--tg-theme-button-text-color);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.subtask-add-btn:active { opacity: 0.7; }
 
 /* ============================================================
    ДОСТИЖЕНИЯ
@@ -803,6 +921,114 @@ button {
 
 .task-item.inactive-today .task-content {
   pointer-events: none;
+}
+
+/* ============================================================
+   DEADLINE INPUT IN MODAL
+   ============================================================ */
+
+.deadline-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.deadline-row-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tg-theme-hint-color);
+}
+
+.deadline-input {
+  width: 100%;
+  background: var(--tg-theme-secondary-bg-color);
+  border: none;
+  border-radius: var(--app-radius-sm);
+  padding: 11px var(--app-spacing);
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--tg-theme-text-color);
+  outline: none;
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.deadline-input:focus {
+  box-shadow: 0 0 0 2px var(--tg-theme-button-color);
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+
+.toast-container {
+  position: fixed;
+  top: calc(var(--header-height) + 8px);
+  left: var(--app-spacing);
+  right: var(--app-spacing);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--tg-theme-bg-color);
+  border-radius: var(--app-radius);
+  box-shadow: var(--shadow-lg);
+  padding: 12px var(--app-spacing);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: all;
+  opacity: 0;
+  transform: translateY(-12px) scale(0.97);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  border-left: 4px solid transparent;
+}
+
+.toast.toast-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast-warning {
+  border-left-color: #ff6d00;
+}
+
+.toast-error {
+  border-left-color: #e53935;
+}
+
+.toast-text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color);
+  line-height: 1.4;
+}
+
+.toast-close {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(128,128,128,0.1);
+  color: var(--tg-theme-hint-color);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.toast-close:hover {
+  background: rgba(128,128,128,0.2);
 }
 
 .modal-footer {
