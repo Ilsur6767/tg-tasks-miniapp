@@ -11,9 +11,9 @@ A minimalist personal productivity tracker built as a **Telegram Mini App**. Tra
 ## Features
 
 - **📋 Tasks tab** — daily (auto-reset each day) and one-time tasks
-- **📅 Day-of-week picker** — set which days a recurring task is active (e.g. gym on Mon/Wed/Fri)
+- **📅 Day-of-week picker** — set which days a recurring task is active (e.g. gym on Mon/Wed/Fri); today's day dot turns **green** when completed, **red** when not
 - **⚡ Mini-tasks tab** — quick lightweight todos
-- **🏆 Achievements tab** — history of everything you've completed, grouped by date
+- **🏆 Achievements tab** — history of completed tasks grouped by date; stats show **wins today** and **fail counter** (overdue deadline tasks + daily tasks not done today)
 - **💭 Thoughts tab** — diary-style journal with timestamps, grouped by date, long-press to delete
 - **📊 Progress bar** — daily completion bar (counts only tasks active today)
 - **✏️ Full CRUD** — add, edit, delete everything

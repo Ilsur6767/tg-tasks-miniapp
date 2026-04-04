@@ -44,6 +44,7 @@ const I18n = {
       sectionDone:          'Выполнено',
       statToday:            'Сегодня',
       statTotal:            'Всего',
+      statFails:            'Провалы',
       confirmReplace:       'Заменить все текущие данные?',
       confirmDeleteAll:     'Удалить ВСЕ данные? Это нельзя отменить.',
       confirmDeleteAll2:    'Последний шанс. Точно удалить?',
@@ -87,6 +88,7 @@ const I18n = {
       sectionDone:          'Done',
       statToday:            'Today',
       statTotal:            'Total',
+      statFails:            'Fails',
       confirmReplace:       'Replace all current data?',
       confirmDeleteAll:     'Delete ALL data? This cannot be undone.',
       confirmDeleteAll2:    'Last chance. Are you sure?',
@@ -763,9 +765,17 @@ const UITasks = {
     let daysHtml   = '';
     if (task.type === 'daily' && task.days?.length && task.days.length < 7) {
       const dots = days.map((name, i) => {
-        const cls     = task.days.includes(i) ? 'active-day' : 'inactive-day';
-        const outline = i === todayIdx ? 'style="outline:2px solid currentColor;outline-offset:1px;"' : '';
-        return `<span class="task-day-dot ${cls}" ${outline}>${name}</span>`;
+        let cls;
+        if (task.days.includes(i)) {
+          if (i === todayIdx) {
+            cls = task.completed ? 'completed-day' : 'failed-day';
+          } else {
+            cls = 'active-day';
+          }
+        } else {
+          cls = 'inactive-day';
+        }
+        return `<span class="task-day-dot ${cls}">${name}</span>`;
       }).join('');
       daysHtml = `<div class="task-days">${dots}</div>`;
     }
@@ -905,18 +915,26 @@ const UIAchievements = {
   emptyEl: document.getElementById('emptyAchievements'),
 
   async render() {
-    const ach = await Store.getAchievements();
+    const [ach, tasks] = await Promise.all([Store.getAchievements(), Store.getTasks()]);
     this.listEl.innerHTML = '';
     if (!ach.length) { this.emptyEl.style.display = 'flex'; return; }
     this.emptyEl.style.display = 'none';
 
-    const today = todayString();
+    const today    = todayString();
+    const now      = Date.now();
+    const failCount = tasks.filter(t =>
+      !t.completed && (
+        (t.deadline && t.deadline < now) ||
+        (t.type === 'daily' && isTaskActiveToday(t))
+      )
+    ).length;
+
     const stats = document.createElement('div');
     stats.className = 'achievements-stats';
     stats.innerHTML = `
       <div class="stat-item"><div class="stat-number">${ach.filter(a => a.completedDate === today).length}</div><div class="stat-label">${I18n.t('statToday')}</div></div>
       <div class="stat-divider"></div>
-      <div class="stat-item"><div class="stat-number">${ach.length}</div><div class="stat-label">${I18n.t('statTotal')}</div></div>`;
+      <div class="stat-item"><div class="stat-number" style="color:#c62828">${failCount}</div><div class="stat-label">${I18n.t('statFails')}</div></div>`;
     this.listEl.appendChild(stats);
 
     const groups = {};

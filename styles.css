@@ -913,6 +913,16 @@ button {
   color: var(--tg-theme-hint-color);
 }
 
+.task-day-dot.completed-day {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.task-day-dot.failed-day {
+  background: #c62828;
+  color: #fff;
+}
+
 /* Задача неактивна сегодня — приглушена */
 .task-item.inactive-today {
   opacity: 0.45;
