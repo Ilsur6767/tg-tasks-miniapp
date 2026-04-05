@@ -53,6 +53,8 @@ const I18n = {
       confirmClearThoughts:       'Удалить все мысли? Это нельзя отменить.',
       confirmClearTasks:          'Удалить все задачи? Это нельзя отменить.',
       confirmClearAchievements:   'Удалить всю историю достижений? Это нельзя отменить.',
+      yesterday:            'Вчера',
+      deadlineExpired:      'просрочено',
       deadlineOverdue:      'Просрочено',
       deadlineSoon:         'Скоро дедлайн',
       subtaskPlaceholder:   'Новая подзадача...',
@@ -98,6 +100,8 @@ const I18n = {
       confirmClearThoughts:       'Delete all thoughts? This cannot be undone.',
       confirmClearTasks:          'Delete all tasks? This cannot be undone.',
       confirmClearAchievements:   'Delete all achievements history? This cannot be undone.',
+      yesterday:            'Yesterday',
+      deadlineExpired:      'overdue',
       deadlineOverdue:      'Overdue',
       deadlineSoon:         'Deadline soon',
       subtaskPlaceholder:   'New subtask...',
@@ -171,7 +175,7 @@ function formatDateLabel(dateStr) {
   const yd = new Date(); yd.setDate(yd.getDate() - 1);
   const yesterday = `${yd.getFullYear()}-${String(yd.getMonth()+1).padStart(2,'0')}-${String(yd.getDate()).padStart(2,'0')}`;
   if (dateStr === today)     return I18n.t('statToday');
-  if (dateStr === yesterday) return I18n.current === 'ru' ? 'Вчера' : 'Yesterday';
+  if (dateStr === yesterday) return I18n.t('yesterday');
   const [y, m, day] = dateStr.split('-');
   const months = I18n.current === 'ru'
     ? ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек']
@@ -191,7 +195,7 @@ function deadlineProgress(task) {
 
   if (diff < 0) {
     color = '#c62828';
-    label = I18n.current === 'ru' ? 'просрочено' : 'overdue';
+    label = I18n.t('deadlineExpired');
   } else {
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
@@ -287,8 +291,13 @@ const ChunkedStorage = {
     for (let i = chunks.length; i < prevN; i++) toRemove.push(`${prefix}_${i}`);
     if (toRemove.length) await CloudStore.removeMultiple(toRemove);
 
-    await CloudStore.set(`${prefix}_n`, String(chunks.length));
-    await Promise.all(chunks.map((c, i) => CloudStore.set(`${prefix}_${i}`, c)));
+    try {
+      await CloudStore.set(`${prefix}_n`, String(chunks.length));
+      await Promise.all(chunks.map((c, i) => CloudStore.set(`${prefix}_${i}`, c)));
+    } catch (e) {
+      console.error(`ChunkedStorage.save(${prefix}) failed:`, e);
+      throw e;
+    }
   },
 
   async load(prefix) {
@@ -524,23 +533,43 @@ class LongPressHandler {
 // ============================================================
 
 const ContextMenu = {
-  el:        document.getElementById('contextMenu'),
-  editBtn:   document.getElementById('ctxEdit'),
-  deleteBtn: document.getElementById('ctxDelete'),
+  el:               document.getElementById('contextMenu'),
+  editBtn:          document.getElementById('ctxEdit'),
+  deleteBtn:        document.getElementById('ctxDelete'),
+  _outsideListener: null,
 
   show(x, y, onEdit, onDelete) {
+    // Удаляем старый listener перед добавлением нового
+    if (this._outsideListener) {
+      document.removeEventListener('touchstart', this._outsideListener);
+      document.removeEventListener('mousedown',  this._outsideListener);
+      this._outsideListener = null;
+    }
     const W = window.innerWidth, H = window.innerHeight;
     this.el.style.left    = Math.min(x, W - 188) + 'px';
     this.el.style.top     = Math.min(y, H - 100) + 'px';
     this.el.style.display = 'block';
-    const cleanup = () => { this.hide(); document.removeEventListener('touchstart', onOut); };
+    const cleanup = () => this.hide();
     const onOut = e => { if (!this.el.contains(e.target)) cleanup(); };
+    this._outsideListener = onOut;
     this.editBtn.onclick   = () => { cleanup(); onEdit(); };
     this.deleteBtn.onclick = () => { cleanup(); onDelete(); };
-    setTimeout(() => document.addEventListener('touchstart', onOut, { passive: true }), 50);
+    setTimeout(() => {
+      document.addEventListener('touchstart', onOut, { passive: true });
+      document.addEventListener('mousedown',  onOut, { passive: true });
+    }, 50);
   },
 
-  hide() { this.el.style.display = 'none'; this.editBtn.onclick = null; this.deleteBtn.onclick = null; },
+  hide() {
+    this.el.style.display = 'none';
+    this.editBtn.onclick   = null;
+    this.deleteBtn.onclick = null;
+    if (this._outsideListener) {
+      document.removeEventListener('touchstart', this._outsideListener);
+      document.removeEventListener('mousedown',  this._outsideListener);
+      this._outsideListener = null;
+    }
+  },
 };
 
 // ============================================================
@@ -581,6 +610,7 @@ const Modal = {
       const val = this.inputEl.value.trim();
       if (!val) { this.inputEl.focus(); return; }
       this._syncDays();
+      // Deadline хранится как UTC milliseconds, но вводится/отображается в local timezone (намеренно)
       const deadline = this.deadlineDate.value
         ? new Date(`${this.deadlineDate.value}T${this.deadlineTime.value || '23:59'}`).getTime()
         : null;
@@ -716,7 +746,7 @@ const UITasks = {
     new LongPressHandler(this.listEl, '.task-item', async (item, x, y) => {
       const task = (await Store.getTasks()).find(t => t.id === item.dataset.id);
       if (!task) return;
-      ContextMenu.show(x, y, () => this._openEdit(task), async () => { await Store.deleteTask(task.id); this.render(); });
+      ContextMenu.show(x, y, () => this._openEdit(task), async () => { await Store.deleteTask(task.id); await this.render(); });
     });
   },
 
@@ -738,8 +768,8 @@ const UITasks = {
     this.listEl.appendChild(this._clearBar(I18n.t('confirmClearTasks'), async () => {
       haptic('medium');
       await Store.clearTasks();
-      this.render();
-      UIAchievements.render();
+      await this.render();
+      await UIAchievements.render();
     }));
 
     await Progress.update();
@@ -833,7 +863,7 @@ const UITasks = {
         haptic('light');
         if (task.completed) { await Store.uncompleteTask(task.id); hapticNotify('warning'); }
         else                { await Store.completeTask(task.id);   hapticNotify('success'); }
-        this.render(); UIAchievements.render();
+        await this.render(); await UIAchievements.render();
       });
       el.querySelector('.task-text').addEventListener('click', () => el.querySelector('.task-checkbox').click());
     }
@@ -955,7 +985,7 @@ const UIAchievements = {
     clearBtn.className = 'clear-all-btn';
     clearBtn.textContent = I18n.t('clearAll');
     clearBtn.addEventListener('click', () => {
-      if (confirm(I18n.t('confirmClearAchievements'))) { haptic('medium'); Store.clearAchievements().then(() => this.render()); }
+      if (confirm(I18n.t('confirmClearAchievements'))) { haptic('medium'); Store.clearAchievements().then(() => this.render()).catch(console.error); }
     });
     clearBar.appendChild(clearBtn);
     this.listEl.appendChild(clearBar);
@@ -1025,7 +1055,7 @@ const UIThoughts = {
     this.sendBtn.disabled = true;
     await Store.addThought(text);
     hapticNotify('success');
-    this.render();
+    await this.render();
   },
 
   async render() {
@@ -1041,7 +1071,7 @@ const UIThoughts = {
     clearBtn.className = 'clear-all-btn';
     clearBtn.textContent = I18n.t('clearAll');
     clearBtn.addEventListener('click', () => {
-      if (confirm(I18n.t('confirmClearThoughts'))) { haptic('medium'); Store.clearThoughts().then(() => this.render()); }
+      if (confirm(I18n.t('confirmClearThoughts'))) { haptic('medium'); Store.clearThoughts().then(() => this.render()).catch(console.error); }
     });
     clearBar.appendChild(clearBtn);
     this.listEl.appendChild(clearBar);
@@ -1078,7 +1108,7 @@ const UIThoughts = {
           card.style.opacity    = '0';
           card.style.transform  = 'scale(0.95)';
           card.style.transition = 'all 0.2s ease';
-          setTimeout(async () => { await Store.deleteThought(thought.id); this.render(); }, 200);
+          setTimeout(async () => { await Store.deleteThought(thought.id); await this.render(); }, 200);
         });
 
         this.listEl.appendChild(card);
@@ -1165,7 +1195,7 @@ const FAB = {
         title: I18n.t('newTask'), showTypeToggle: true,
         onSave: async (title, type, days, deadline) => {
           await Store.addTask(title, type, days, deadline);
-          UITasks.render();
+          await UITasks.render();
         },
       });
     });
