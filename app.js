@@ -50,8 +50,9 @@ const I18n = {
       confirmDeleteAll2:    'Последний шанс. Точно удалить?',
       confirmDeleteThought: 'Удалить запись?',
       clearAll:             'Очистить всё',
-      confirmClearThoughts: 'Удалить все мысли? Это нельзя отменить.',
-      confirmClearTasks:    'Удалить все задачи? Это нельзя отменить.',
+      confirmClearThoughts:       'Удалить все мысли? Это нельзя отменить.',
+      confirmClearTasks:          'Удалить все задачи? Это нельзя отменить.',
+      confirmClearAchievements:   'Удалить всю историю достижений? Это нельзя отменить.',
       deadlineOverdue:      'Просрочено',
       deadlineSoon:         'Скоро дедлайн',
       subtaskPlaceholder:   'Новая подзадача...',
@@ -94,8 +95,9 @@ const I18n = {
       confirmDeleteAll2:    'Last chance. Are you sure?',
       confirmDeleteThought: 'Delete this entry?',
       clearAll:             'Clear all',
-      confirmClearThoughts: 'Delete all thoughts? This cannot be undone.',
-      confirmClearTasks:    'Delete all tasks? This cannot be undone.',
+      confirmClearThoughts:       'Delete all thoughts? This cannot be undone.',
+      confirmClearTasks:          'Delete all tasks? This cannot be undone.',
+      confirmClearAchievements:   'Delete all achievements history? This cannot be undone.',
       deadlineOverdue:      'Overdue',
       deadlineSoon:         'Deadline soon',
       subtaskPlaceholder:   'New subtask...',
@@ -388,8 +390,9 @@ const Store = {
     await this.saveThoughts((await this.getThoughts()).filter(t => t.id !== id));
   },
 
-  async clearThoughts() { await this.saveThoughts([]); },
-  async clearTasks()    { await this.saveTasks([]); await this.saveAchievements([]); },
+  async clearThoughts()      { await this.saveThoughts([]); },
+  async clearTasks()         { await this.saveTasks([]); await this.saveAchievements([]); },
+  async clearAchievements()  { await this.saveAchievements([]); },
 };
 
 // ============================================================
@@ -551,7 +554,9 @@ const Modal = {
   typeToggle:    document.getElementById('typeToggle'),
   daysPicker:    document.getElementById('daysPicker'),
   daysRow:       document.getElementById('daysRow'),
-  deadlineInput: document.getElementById('deadlineInput'),
+  deadlineDate:  document.getElementById('deadlineDate'),
+  deadlineTime:  document.getElementById('deadlineTime'),
+  deadlineClear: document.getElementById('deadlineClear'),
   saveBtn:       document.getElementById('modalSave'),
   cancelBtn:     document.getElementById('modalCancel'),
   _onSave: null, _isOpen: false,
@@ -561,6 +566,7 @@ const Modal = {
     this._buildDaysRow();
     this.cancelBtn.addEventListener('click', () => this.close());
     this.overlay.addEventListener('touchstart', e => { if (e.target === this.overlay) this.close(); }, { passive: true });
+    this.deadlineClear.addEventListener('click', () => { this.deadlineDate.value = ''; this.deadlineTime.value = ''; });
 
     this.typeToggle.querySelectorAll('.type-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -575,8 +581,8 @@ const Modal = {
       const val = this.inputEl.value.trim();
       if (!val) { this.inputEl.focus(); return; }
       this._syncDays();
-      const deadline = this.deadlineInput.value
-        ? new Date(this.deadlineInput.value).getTime()
+      const deadline = this.deadlineDate.value
+        ? new Date(`${this.deadlineDate.value}T${this.deadlineTime.value || '23:59'}`).getTime()
         : null;
       if (this._onSave) this._onSave(val, this._selectedType, this._selectedDays, deadline);
       this.close();
@@ -625,13 +631,15 @@ const Modal = {
     this.daysPicker.style.display  = showTypeToggle && type === 'daily' ? 'flex' : 'none';
     this._setDaysUI(days);
 
-    // Set deadline input
+    // Set deadline inputs
     if (deadline) {
       const d = new Date(deadline);
       const pad = n => String(n).padStart(2, '0');
-      this.deadlineInput.value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      this.deadlineDate.value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+      this.deadlineTime.value = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
     } else {
-      this.deadlineInput.value = '';
+      this.deadlineDate.value = '';
+      this.deadlineTime.value = '';
     }
 
     this.overlay.classList.add('visible');
@@ -804,6 +812,10 @@ const UITasks = {
           ${daysHtml}
           ${deadlineChipHtml}
         </div>
+        <div class="task-hover-btns">
+          <button class="task-hover-btn" data-action="edit" title="${I18n.t('ctxEdit')}">✏️</button>
+          <button class="task-hover-btn is-delete" data-action="delete" title="${I18n.t('ctxDelete')}">🗑️</button>
+        </div>
         <div class="task-expand-zone" data-action="expand">
           ${countHtml}
           <span class="${chevronCls}">›</span>
@@ -936,6 +948,17 @@ const UIAchievements = {
       <div class="stat-divider"></div>
       <div class="stat-item"><div class="stat-number" style="color:#c62828">${failCount}</div><div class="stat-label">${I18n.t('statFails')}</div></div>`;
     this.listEl.appendChild(stats);
+
+    const clearBar = document.createElement('div');
+    clearBar.className = 'clear-all-bar';
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'clear-all-btn';
+    clearBtn.textContent = I18n.t('clearAll');
+    clearBtn.addEventListener('click', () => {
+      if (confirm(I18n.t('confirmClearAchievements'))) { haptic('medium'); Store.clearAchievements().then(() => this.render()); }
+    });
+    clearBar.appendChild(clearBtn);
+    this.listEl.appendChild(clearBar);
 
     const groups = {};
     ach.forEach(a => { if (!groups[a.completedDate]) groups[a.completedDate] = []; groups[a.completedDate].push(a); });

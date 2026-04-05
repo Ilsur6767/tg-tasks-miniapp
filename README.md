@@ -12,12 +12,11 @@ A minimalist personal productivity tracker built as a **Telegram Mini App**. Tra
 
 - **📋 Tasks tab** — daily (auto-reset each day) and one-time tasks
 - **📅 Day-of-week picker** — set which days a recurring task is active (e.g. gym on Mon/Wed/Fri); today's day dot turns **green** when completed, **red** when not
-- **⚡ Mini-tasks tab** — quick lightweight todos
-- **🏆 Achievements tab** — history of completed tasks grouped by date; stats show **wins today** and **fail counter** (overdue deadline tasks + daily tasks not done today)
+- **🏆 Wins tab** — history of completed tasks grouped by date; stats show **wins today** and **fail counter** (overdue deadline tasks + daily tasks not done today)
 - **💭 Thoughts tab** — diary-style journal with timestamps, grouped by date, long-press to delete
 - **📊 Progress bar** — daily completion bar (counts only tasks active today)
-- **✏️ Full CRUD** — add, edit, delete everything
-- **👆 Swipe to action** — swipe left on any item to reveal Edit / Delete buttons
+- **✏️ Full CRUD** — add, edit, delete everything; **hover on desktop** to reveal Edit / Delete buttons
+- **👆 Swipe to action** — swipe left on mobile to reveal Edit / Delete buttons
 - **🔔 Haptic feedback** — native Telegram vibration on interactions
 - **🎨 Follows Telegram theme** — automatically adapts to light / dark mode and user's color scheme
 - **🌐 RU / EN interface** — language switcher in the header, preference saved per-user
@@ -84,8 +83,7 @@ All data is stored in **Telegram CloudStorage** (synced to your Telegram account
 
 | Key | Contents |
 |-----|----------|
-| `tma_tasks_n` + `tma_tasks_0..N` | Chunked array of task objects `{id, title, type, completed, days, createdAt}` |
-| `tma_mini_tasks_n` + `tma_mini_tasks_0..N` | Chunked array of mini-task objects `{id, title, completed, createdAt}` |
+| `tma_tasks_n` + `tma_tasks_0..N` | Chunked array of task objects `{id, title, type, completed, days, deadline, subtasks, createdAt}` |
 | `tma_achievements_n` + `tma_achievements_0..N` | Chunked array of completed items `{id, taskId, title, type, completedAt, completedDate}` |
 | `tma_thoughts_n` + `tma_thoughts_0..N` | Chunked array of thought entries `{id, text, createdAt}` |
 | `tma_last_reset` | Date string `YYYY-MM-DD` of last daily reset |

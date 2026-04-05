@@ -117,7 +117,11 @@
         </div>
         <div class="deadline-row" id="deadlineRow">
           <span class="deadline-row-label" data-i18n="deadline">Дедлайн</span>
-          <input type="datetime-local" class="deadline-input" id="deadlineInput">
+          <div class="deadline-picker">
+            <input type="date" id="deadlineDate" class="deadline-input">
+            <input type="time" id="deadlineTime" class="deadline-input">
+            <button class="deadline-clear-btn" id="deadlineClear" type="button">✕</button>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
